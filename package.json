@@ -1,11 +1,7 @@
 {
-  "type": "module",
   "scripts": {
-    "build": "esbuild --bundle --outfile=./dist/index.js --platform=node --target=node18 ./src/index.ts",
-    "zip": "zip -j lambda.zip dist/index.js",
-    "update": "aws lambda update-function-code --zip-file fileb://lambda.zip --function-name http",
+    "build": "esbuild --bundle --minify  --outfile=./dist/api.js  --platform=node --target=node20 ./src/functions/api.ts",
     "dev": "tsx watch  --ignore node_modules ./src/index.ts  ",
-    "deploy": "run-s build zip update",
     "generate": "drizzle-kit generate:sqlite",
     "migrate": "drizzle-kit push:sqlite"
   },
@@ -13,7 +9,6 @@
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
-    "npm-run-all2": "^6.1.1",
     "tsx": "^4.7.1"
   },
   "dependencies": {
@@ -25,9 +20,7 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.6",
     "hono": "^4.1.7",
-    "i": "^0.3.7",
     "jsonwebtoken": "^9.0.2",
-    "npm": "^10.5.0",
     "resend": "^3.2.0",
     "zod": "^3.22.4"
   }

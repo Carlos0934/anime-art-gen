@@ -1,0 +1,42 @@
+service: anime-art-gen
+useDotenv: true
+
+package:
+  patterns:
+    - '!src/**'
+    - '!node_modules/**'
+    - '!migrations/**'
+    - '!drizzle.config.ts'
+  
+
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+    DATABASE_AUTH_TOKEN: ${env:DATABASE_AUTH_TOKEN}
+    JWT_SECRET: ${env:JWT_SECRET}
+    RESEND_FROM_EMAIL: ${env:RESEND_FROM_EMAIL}
+    RESEND_API_KEY: ${env:RESEND_API_KEY}
+    STRIPE_SECRET_KEY: ${env:STRIPE_SECRET_KEY}
+
+  iam:
+      role:
+        name: lambda-anime-art-gen-${opt:stage}-role
+        statements:
+          - Effect: "Allow"
+            Action:
+              - "s3:*"
+            Resource: "*"
+
+
+functions:
+  api:
+    handler: dist/api.handler
+    events:
+      - http:
+          path: "{proxy+}"
+          method: ANY
+
