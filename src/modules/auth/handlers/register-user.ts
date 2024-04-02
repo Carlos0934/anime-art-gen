@@ -1,19 +1,16 @@
 import { Event, Handler } from "@/core/handler";
 
-import { Events } from "../events";
+import { AuthEvents } from "../events";
 import { Context } from "@/core/context";
 import { User } from "@/core/entities/user";
 import { UserAlreadyExistException } from "../exceptions/user-already-exist-error";
 
-export class RegisterAccountHandler extends Handler<
-  RegisterAccountEvent,
-  User
-> {
-  eventName = Events.RegisterAccount;
+export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
+  eventName = AuthEvents.RegisterUser;
 
   async handle(
-    event: RegisterAccountEvent,
-    { userRepository, passwordHasher }: Context
+    event: RegisterUserEvent,
+    { userRepository, passwordHasher, mailer, jwtService }: Context
   ): Promise<User> {
     const userAlreadyExist = await userRepository.userExist(event.data.email);
     if (userAlreadyExist) throw new UserAlreadyExistException(event.data.email);
@@ -29,14 +26,25 @@ export class RegisterAccountHandler extends Handler<
 
     await userRepository.save(user);
 
+    const token = jwtService.sign({ email: user.email });
+    await mailer.send({
+      template: {
+        name: "email-verification",
+        data: {
+          name: user.email,
+          link: `http://localhost:3000/auth/verify-email?token=${token}`,
+        },
+      },
+      to: user.email,
+    });
     return user;
   }
 }
 
-export class RegisterAccountEvent extends Event {
+export class RegisterUserEvent extends Event {
   constructor(public readonly data: { email: string; password: string }) {
     super();
   }
 
-  name = Events.RegisterAccount;
+  name = AuthEvents.RegisterUser;
 }

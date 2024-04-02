@@ -1,12 +1,12 @@
 import { Context } from "@/core/context";
-import { Events } from "../events";
+import { AuthEvents } from "../events";
 import { Event, Handler } from "@/core/handler";
 
 export class SendPasswordResetHandler extends Handler<
   SendPasswordResetEvent,
   void
 > {
-  eventName = Events.SendPasswordReset;
+  eventName = AuthEvents.SendPasswordReset;
 
   async handle(
     event: SendPasswordResetEvent,
@@ -22,14 +22,19 @@ export class SendPasswordResetHandler extends Handler<
 
     await mailer.send({
       to: email,
-      subject: "Password reset",
-      text: `Click here to reset your password: http://localhost:3000/reset-password?token=${token}`,
+      template: {
+        name: "password-reset",
+        data: {
+          name: user.name,
+          link: `http://localhost:3000/auth/reset-password?token=${token}`,
+        },
+      },
     });
   }
 }
 
 export class SendPasswordResetEvent extends Event {
-  name: string = Events.SendPasswordReset;
+  name: string = AuthEvents.SendPasswordReset;
   constructor(public readonly data: { email: string }) {
     super();
   }

@@ -2,7 +2,7 @@ import { AppModule } from "@/core/app-module";
 import authRouter from "./routes/auth";
 import { LoginUserHandler } from "./handlers/login-user";
 import { ConfirmUserMailHandler } from "./handlers/confirm-user-mail";
-import { RegisterAccountHandler } from "./handlers/register-account";
+import { RegisterUserHandler } from "./handlers/register-user";
 import { ResetUserPasswordHandler } from "./handlers/reset-user-password";
 import { SendPasswordResetHandler } from "./handlers/send-password-reset";
 
@@ -13,7 +13,7 @@ export class AuthModule extends AppModule {
       handlers: [
         LoginUserHandler,
         ConfirmUserMailHandler,
-        RegisterAccountHandler,
+        RegisterUserHandler,
         ResetUserPasswordHandler,
         SendPasswordResetHandler,
       ],

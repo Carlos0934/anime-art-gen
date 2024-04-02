@@ -1,6 +1,6 @@
 import { Event, Handler } from "@/core/handler";
 
-import { Events } from "../events";
+import { AuthEvents } from "../events";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";
 
@@ -8,7 +8,7 @@ export class ConfirmUserMailHandler extends Handler<
   ConfirmUserMailEvent,
   void
 > {
-  eventName = Events.ConfirmUserMail;
+  eventName = AuthEvents.ConfirmUserMail;
 
   async handle(event: ConfirmUserMailEvent, ctx: Context): Promise<void> {
     const { token } = event.data;
@@ -32,7 +32,7 @@ export class ConfirmUserMailHandler extends Handler<
 }
 
 export class ConfirmUserMailEvent extends Event {
-  name = Events.ConfirmUserMail;
+  name = AuthEvents.ConfirmUserMail;
   constructor(public readonly data: { token: string }) {
     super();
   }

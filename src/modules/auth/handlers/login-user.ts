@@ -1,6 +1,6 @@
 import { Event, Handler } from "@/core/handler";
 
-import { Events } from "../events";
+import { AuthEvents } from "../events";
 
 import { Context } from "@/core/context";
 import { InvalidCredentialsException } from "../exceptions/invalid-credentials-exeception";
@@ -10,7 +10,7 @@ export class LoginUserHandler extends Handler<
   LoginUserEvent,
   { token: string }
 > {
-  readonly eventName = Events.LoginUser;
+  readonly eventName = AuthEvents.LoginUser;
 
   async handle(
     event: LoginUserEvent,
@@ -46,7 +46,7 @@ export class LoginUserHandler extends Handler<
 }
 
 export class LoginUserEvent extends Event {
-  name = Events.LoginUser;
+  name = AuthEvents.LoginUser;
   constructor(public readonly data: { email: string; password: string }) {
     super();
   }

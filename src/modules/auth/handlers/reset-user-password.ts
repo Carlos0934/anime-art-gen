@@ -1,4 +1,4 @@
-import { Events } from "../events";
+import { AuthEvents } from "../events";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";
 import { Event, Handler } from "@/core/handler";
@@ -7,7 +7,7 @@ export class ResetUserPasswordHandler extends Handler<
   ResetUserPasswordEvent,
   void
 > {
-  eventName = Events.ResetUserPassword;
+  eventName = AuthEvents.ResetUserPassword;
 
   async handle(event: ResetUserPasswordEvent, ctx: Context): Promise<void> {
     const { token, newPassword, oldPassword } = event.data;
@@ -39,7 +39,7 @@ export class ResetUserPasswordHandler extends Handler<
 }
 
 export class ResetUserPasswordEvent extends Event {
-  name = Events.ResetUserPassword;
+  name = AuthEvents.ResetUserPassword;
   constructor(
     public readonly data: {
       token: string;
