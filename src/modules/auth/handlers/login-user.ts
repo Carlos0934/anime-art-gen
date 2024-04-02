@@ -6,9 +6,10 @@ import { Context } from "@/core/context";
 import { InvalidCredentialsException } from "../exceptions/invalid-credentials-exeception";
 import { EmailNotVerifiedException } from "../exceptions/email-not-verified-exeption";
 
-export class LoginUserHandler
-  implements Handler<LoginUserEvent, { token: string }>
-{
+export class LoginUserHandler extends Handler<
+  LoginUserEvent,
+  { token: string }
+> {
   readonly eventName = Events.LoginUser;
 
   async handle(

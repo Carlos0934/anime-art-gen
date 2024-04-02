@@ -1,7 +1,6 @@
 import { Event, Handler } from "@/core/handler";
 
 import { Events } from "../events";
-import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";
 import { User } from "@/core/entities/user";
 import { UserAlreadyExistException } from "../exceptions/user-already-exist-error";

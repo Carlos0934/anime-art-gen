@@ -4,9 +4,10 @@ import { Events } from "../events";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";
 
-export class ConfirmUserMailHandler
-  implements Handler<ConfirmUserMailEvent, void>
-{
+export class ConfirmUserMailHandler extends Handler<
+  ConfirmUserMailEvent,
+  void
+> {
   eventName = Events.ConfirmUserMail;
 
   async handle(event: ConfirmUserMailEvent, ctx: Context): Promise<void> {
