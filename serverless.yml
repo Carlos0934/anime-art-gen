@@ -14,7 +14,7 @@ package:
 custom:
   customDomain:
     domainName: api.anime-art-gen.com
-    basePath: ${self:provider.stage}
+    basePath: ${opt:stage, self:provider.stage}
     stage: ${opt:stage, self:provider.stage}
     createRoute53Record: true
 
