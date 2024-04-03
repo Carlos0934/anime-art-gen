@@ -22,7 +22,6 @@
     "drizzle-orm": "^0.30.6",
     "hono": "^4.1.7",
     "jsonwebtoken": "^9.0.2",
-    "resend": "^3.2.0",
     "zod": "^3.22.4"
   }
 }
