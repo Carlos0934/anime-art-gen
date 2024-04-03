@@ -1,6 +1,9 @@
 service: anime-art-gen
 useDotenv: true
 
+plugins:
+  - serverless-domain-manager
+
 package:
   patterns:
     - '!src/**'
@@ -8,6 +11,12 @@ package:
     - '!migrations/**'
     - '!drizzle.config.ts'
   
+custom:
+  customDomain:
+    domainName: api.anime-art-gen.com
+    basePath: ''
+    stage: ${opt:stage, self:provider.stage}
+    createRoute53Record: true
 
 
 provider:

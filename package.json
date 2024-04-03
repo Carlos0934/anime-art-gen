@@ -9,6 +9,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
+    "serverless-domain-manager": "^7.3.8",
     "tsx": "^4.7.1"
   },
   "dependencies": {
