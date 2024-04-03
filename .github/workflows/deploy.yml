@@ -6,9 +6,12 @@ on:
       - main
 
 jobs:
-  deployments:
+  deployment:
     environment: production
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Checkout code
