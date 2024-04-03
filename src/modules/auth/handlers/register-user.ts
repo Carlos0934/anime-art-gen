@@ -12,7 +12,7 @@ export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
     event: RegisterUserEvent,
     { userRepository, passwordHasher, mailer, jwtService }: Context
   ): Promise<User> {
-    const userAlreadyExist = await userRepository.userExist(event.data.email);
+    const userAlreadyExist = await userRepository.userExists(event.data.email);
     if (userAlreadyExist) throw new UserAlreadyExistException(event.data.email);
 
     const user = new User({

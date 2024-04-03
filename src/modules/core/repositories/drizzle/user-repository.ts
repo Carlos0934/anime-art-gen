@@ -16,7 +16,7 @@ export class DrizzleUserRepository implements UserRepository {
 
     return user ? new User(user) : null;
   }
-  async userExist(email: string): Promise<boolean> {
+  async userExists(email: string): Promise<boolean> {
     const result = await this.db
       .select({ id: users.id })
       .from(users)

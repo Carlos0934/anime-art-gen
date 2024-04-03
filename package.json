@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "esbuild --bundle --minify  --outfile=./dist/api.js  --platform=node --target=node20 ./src/functions/api.ts",
+    "test": "vitest",
     "dev": "tsx watch  --ignore node_modules ./src/index.ts  ",
     "generate": "drizzle-kit generate:sqlite",
     "migrate": "drizzle-kit push:sqlite"
@@ -9,8 +10,10 @@
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
+    "glob": "^10.3.12",
     "serverless-domain-manager": "^7.3.8",
-    "tsx": "^4.7.1"
+    "tsx": "^4.7.1",
+    "vitest": "^1.4.0"
   },
   "dependencies": {
     "@hono/graphql-server": "^0.4.3",
