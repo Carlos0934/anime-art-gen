@@ -9,6 +9,13 @@ import database from "@/core/config/db/database";
 export class DrizzleUserRepository implements UserRepository {
   constructor(private readonly db: typeof database) {}
 
+  async findById(id: string): Promise<User | null> {
+    const user = await this.db.query.users.findFirst({
+      where: eq(users.id, id),
+    });
+
+    return user ? new User(user) : null;
+  }
   async userExist(email: string): Promise<boolean> {
     const result = await this.db
       .select({ id: users.id })
