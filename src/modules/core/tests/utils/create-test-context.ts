@@ -22,5 +22,8 @@ export const createTestContext = (): Context => {
       sign: vi.fn(),
       verify: vi.fn(),
     },
+    creditsConverter: {
+      convertToCredits: vi.fn(),
+    },
   };
 };

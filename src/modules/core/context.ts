@@ -6,12 +6,14 @@ import { PasswordHasher } from "./utils/password-hasher/interface";
 import { CryptoPasswordHasher } from "./utils/password-hasher/crypto-password-hasher";
 import { JwtService } from "./utils/jwt-service/jwt-service";
 import { SesMailer } from "./utils/mailer/ses-mailer";
+import { CreditsConverter } from "./utils/credits-converter/interface";
 
 export type Context = {
   readonly userRepository: UserRepository;
   readonly mailer: Mailer;
   readonly passwordHasher: PasswordHasher;
   readonly jwtService: JwtService;
+  readonly creditsConverter: CreditsConverter;
 };
 
 export const createContext = (): Context => {
@@ -19,10 +21,12 @@ export const createContext = (): Context => {
   const resendMailer = new SesMailer();
   const cryptoPasswordHasher = new CryptoPasswordHasher();
   const jwtService = new JwtService();
+  const creditsConverter = new CreditsConverter();
   return {
     userRepository,
     mailer: resendMailer,
     passwordHasher: cryptoPasswordHasher,
     jwtService,
+    creditsConverter,
   };
 };
