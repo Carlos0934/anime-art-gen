@@ -2,11 +2,23 @@ import { Hono } from "hono";
 import { StripeRechargeSchema } from "./schemas";
 import { eventBus } from "@/core/eventBus";
 import { RechargeCreditsEvent } from "./handlers/recharge-credits-handler";
+import { stripe } from "./config/stripe";
 
 const paymentRoutes = new Hono();
 
 paymentRoutes.post("/stripe-recharge", async (ctx) => {
-  const { type, data } = await ctx.req.json();
+  const body = await ctx.req.text();
+  const signature = ctx.req.header("stripe-signature");
+  const secret = process.env.STRIPE_WEBHOOK_SECRET!;
+  if (!signature) {
+    return ctx.json({ message: "Invalid request" }, 400);
+  }
+
+  const { data, type } = stripe.webhooks.constructEvent(
+    body,
+    signature,
+    secret
+  );
 
   if (type !== "checkout.session.completed") {
     return ctx.json({ message: "Invalid request" }, 400);
@@ -27,9 +39,9 @@ paymentRoutes.post("/stripe-recharge", async (ctx) => {
     },
   });
 
-  await eventBus.publish(event);
+  const credits = await eventBus.publish(event);
 
-  return ctx.text("Recharging credits with Stripe");
+  return ctx.text(`Recharged ${credits} credits`);
 });
 
 export default paymentRoutes;

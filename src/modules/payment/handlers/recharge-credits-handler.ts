@@ -6,11 +6,11 @@ import { Amount } from "@/core/utils/credits-converter/interface";
 
 export class RechargeCreditsHandler extends Handler<
   RechargeCreditsEvent,
-  void
+  number
 > {
   eventName = PaymentEvents.RechargeCredits;
 
-  async handle(event: RechargeCreditsEvent, ctx: Context): Promise<void> {
+  async handle(event: RechargeCreditsEvent, ctx: Context): Promise<number> {
     const { userEmail, amount } = event.data;
 
     const user = await ctx.userRepository.findByEmail(userEmail);
@@ -22,6 +22,8 @@ export class RechargeCreditsHandler extends Handler<
     user.credits += credits;
 
     await ctx.userRepository.update(user);
+
+    return credits;
   }
 }
 
