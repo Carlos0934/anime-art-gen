@@ -1,5 +1,5 @@
 import { AppModule } from "@/core/app-module";
-import authRouter from "./routes/auth";
+import authRoutes from "./routes";
 import { LoginUserHandler } from "./handlers/login-user";
 import { ConfirmUserMailHandler } from "./handlers/confirm-user-mail";
 import { RegisterUserHandler } from "./handlers/register-user";
@@ -17,7 +17,7 @@ export class AuthModule extends AppModule {
         ResetUserPasswordHandler,
         SendPasswordResetHandler,
       ],
-      router: authRouter,
+      routes: authRoutes,
     });
   }
 }

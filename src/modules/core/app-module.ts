@@ -3,26 +3,26 @@ import { Handler } from "./handler";
 import { EventBus } from "./eventBus";
 
 export abstract class AppModule {
-  private router: Hono;
+  private routes: Hono;
   private handlers: (new (...args: any[]) => Handler)[];
   private basePath: string;
 
   constructor({
-    router,
+    routes,
     basePath,
     handlers,
   }: {
-    router: Hono;
+    routes: Hono;
     basePath: string;
     handlers: (new (...args: any[]) => Handler)[];
   }) {
-    this.router = router;
+    this.routes = routes;
     this.handlers = handlers;
     this.basePath = basePath;
   }
 
   register(app: Hono, eventBus: EventBus) {
-    app.route(this.basePath, this.router);
+    app.route(this.basePath, this.routes);
     this.handlers.forEach((handler) => {
       const instance = new handler();
       eventBus.registerHandler(instance.eventName, instance);

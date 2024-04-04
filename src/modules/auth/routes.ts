@@ -1,30 +1,30 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 
-import { RegisterUserEvent } from "../handlers/register-user";
+import { RegisterUserEvent } from "./handlers/register-user";
 
-import { LoginUserEvent } from "../../../modules/auth/handlers/login-user";
+import { LoginUserEvent } from "./handlers/login-user";
 import {
   AuthLoginSchema,
   AuthRegisterSchema,
   AuthResetPasswordSchema,
   AuthSendResetPasswordSchema,
-} from "../schemas/auth-schemas";
+} from "./schemas/auth-schemas";
 import { eventBus } from "@/core/eventBus";
-import { ConfirmUserMailEvent } from "../handlers/confirm-user-mail";
-import { SendPasswordResetEvent } from "../handlers/send-password-reset";
-import { ResetUserPasswordEvent } from "../handlers/reset-user-password";
+import { ConfirmUserMailEvent } from "./handlers/confirm-user-mail";
+import { SendPasswordResetEvent } from "./handlers/send-password-reset";
+import { ResetUserPasswordEvent } from "./handlers/reset-user-password";
 
-const authRouter = new Hono();
+const authRoutes = new Hono();
 
-authRouter.post("/login", zValidator("json", AuthLoginSchema), async (ctx) => {
+authRoutes.post("/login", zValidator("json", AuthLoginSchema), async (ctx) => {
   const data = ctx.req.valid("json");
   const event = new LoginUserEvent(data);
   const result = await eventBus.publish(event);
   return ctx.json(result);
 });
 
-authRouter.post(
+authRoutes.post(
   "/register",
   zValidator("json", AuthRegisterSchema),
   async (ctx) => {
@@ -35,7 +35,7 @@ authRouter.post(
   }
 );
 
-authRouter.get("/verify-email", async (ctx) => {
+authRoutes.get("/verify-email", async (ctx) => {
   const token = ctx.req.query("token");
 
   if (!token) {
@@ -47,7 +47,7 @@ authRouter.get("/verify-email", async (ctx) => {
   return ctx.redirect("http://localhost:3000");
 });
 
-authRouter.post(
+authRoutes.post(
   "/send-reset-password",
   zValidator("json", AuthSendResetPasswordSchema),
   async (ctx) => {
@@ -58,7 +58,7 @@ authRouter.post(
   }
 );
 
-authRouter.get("/reset-password", async (ctx) => {
+authRoutes.get("/reset-password", async (ctx) => {
   const token = ctx.req.query("token");
 
   if (!token) {
@@ -68,7 +68,7 @@ authRouter.get("/reset-password", async (ctx) => {
   return ctx.redirect(`http://localhost:3000/reset-password?token=${token}`);
 });
 
-authRouter.post(
+authRoutes.post(
   "/reset-password",
   zValidator("json", AuthResetPasswordSchema),
   async (ctx) => {
@@ -78,4 +78,4 @@ authRouter.post(
     return ctx.json({ message: "Password reset" });
   }
 );
-export default authRouter;
+export default authRoutes;
