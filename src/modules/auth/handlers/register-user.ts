@@ -31,7 +31,6 @@ export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
       template: {
         name: "email-verification",
         data: {
-          name: user.email,
           link: `http://localhost:3000/auth/verify-email?token=${token}`,
         },
       },

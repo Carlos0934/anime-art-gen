@@ -9,94 +9,85 @@ import { UserAlreadyExistException } from "../exceptions/user-already-exist-erro
 import { EmailNotVerifiedException } from "../exceptions/email-not-verified-exeption";
 import { Context } from "@/core/context";
 
-describe("LoginUserHandler", () => {
+describe.concurrent("LoginUserHandler", () => {
   const handler: LoginUserHandler = new LoginUserHandler();
 
-  test.concurrent(
-    "should return a token when the user is logged in",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const user = UserMother.createVerifiedUser();
-      const token = "token";
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(user);
+  test("should return a token when the user is logged in", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const user = UserMother.createVerifiedUser();
+    const token = "token";
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(user);
 
-      ctx.passwordHasher.comparePassword = vi
-        .fn(ctx.passwordHasher.comparePassword)
-        .mockResolvedValue(true);
+    ctx.passwordHasher.comparePassword = vi
+      .fn(ctx.passwordHasher.comparePassword)
+      .mockResolvedValue(true);
 
-      ctx.jwtService.sign = vi.fn(ctx.jwtService.sign).mockReturnValue(token);
+    ctx.jwtService.sign = vi.fn(ctx.jwtService.sign).mockReturnValue(token);
 
-      const event = new LoginUserEvent({
-        email: user.email,
-        password: user.password!,
-      });
+    const event = new LoginUserEvent({
+      email: user.email,
+      password: user.password!,
+    });
 
-      // Act
-      const result = await handler.handle(event, ctx);
+    // Act
+    const result = await handler.handle(event, ctx);
 
+    // Assert
+    expect(result).toStrictEqual({ token });
+  });
+
+  test("should throw an error when the user is not found", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const user = UserMother.createDefaultUser();
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(null);
+
+    const event = new LoginUserEvent({
+      email: user.email,
+      password: user.password!,
+    });
+
+    // Act
+    try {
+      await handler.handle(event, ctx);
+    } catch (error) {
       // Assert
-      expect(result).toStrictEqual({ token });
+
+      expect(error).toBeInstanceOf(InvalidCredentialsException);
     }
-  );
+  });
 
-  test.concurrent(
-    "should throw an error when the user is not found",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const user = UserMother.createDefaultUser();
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(null);
+  test("should throw an error when the password is invalid", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const user = UserMother.createVerifiedUser();
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(user);
 
-      const event = new LoginUserEvent({
-        email: user.email,
-        password: user.password!,
-      });
+    ctx.passwordHasher.comparePassword = vi
+      .fn(ctx.passwordHasher.comparePassword)
+      .mockResolvedValue(false);
 
-      // Act
-      try {
-        await handler.handle(event, ctx);
-      } catch (error) {
-        // Assert
+    const event = new LoginUserEvent({
+      email: user.email,
+      password: user.password!,
+    });
 
-        expect(error).toBeInstanceOf(InvalidCredentialsException);
-      }
+    // Act
+    try {
+      await handler.handle(event, ctx);
+    } catch (error) {
+      // Assert
+
+      expect(error).toBeInstanceOf(InvalidCredentialsException);
     }
-  );
-
-  test.concurrent(
-    "should throw an error when the password is invalid",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const user = UserMother.createVerifiedUser();
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(user);
-
-      ctx.passwordHasher.comparePassword = vi
-        .fn(ctx.passwordHasher.comparePassword)
-        .mockResolvedValue(false);
-
-      const event = new LoginUserEvent({
-        email: user.email,
-        password: user.password!,
-      });
-
-      // Act
-      try {
-        await handler.handle(event, ctx);
-      } catch (error) {
-        // Assert
-
-        expect(error).toBeInstanceOf(InvalidCredentialsException);
-      }
-    }
-  );
+  });
 
   test("should throw an error when the user is not verified", async () => {
     // Arrange

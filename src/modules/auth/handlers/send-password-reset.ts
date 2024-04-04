@@ -25,7 +25,6 @@ export class SendPasswordResetHandler extends Handler<
       template: {
         name: "password-reset",
         data: {
-          name: user.name,
           link: `http://localhost:3000/auth/reset-password?token=${token}`,
         },
       },

@@ -8,94 +8,82 @@ import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";
 
-describe("ConfirmUserMailHandler", () => {
+describe.concurrent("ConfirmUserMailHandler", () => {
   const handler: ConfirmUserMailHandler = new ConfirmUserMailHandler();
 
-  test.concurrent(
-    "should confirm user email when valid token is provided",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const user = UserMother.createDefaultUser();
-      const token = "valid-token";
-      const event = new ConfirmUserMailEvent({ token });
+  test("should confirm user email when valid token is provided", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const user = UserMother.createDefaultUser();
+    const token = "valid-token";
+    const event = new ConfirmUserMailEvent({ token });
 
-      ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(user);
-      ctx.userRepository.update = vi
-        .fn(ctx.userRepository.update)
-        .mockResolvedValue();
+    ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(user);
+    ctx.userRepository.update = vi
+      .fn(ctx.userRepository.update)
+      .mockResolvedValue();
 
-      // Act
-      await handler.handle(event, ctx);
+    // Act
+    await handler.handle(event, ctx);
 
-      // Assert
-      expect(user.emailVerified).toBeInstanceOf(Date);
-      expect(ctx.userRepository.update).toHaveBeenCalledWith(user);
-    }
-  );
+    // Assert
+    expect(user.emailVerified).toBeInstanceOf(Date);
+    expect(ctx.userRepository.update).toHaveBeenCalledWith(user);
+  });
 
-  test.concurrent(
-    "should throw an exception when invalid token is provided",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const token = "invalid-token";
-      const event = new ConfirmUserMailEvent({ token });
+  test("should throw an exception when invalid token is provided", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const token = "invalid-token";
+    const event = new ConfirmUserMailEvent({ token });
 
-      ctx.jwtService.verify = vi.fn().mockReturnValue(null);
+    ctx.jwtService.verify = vi.fn().mockReturnValue(null);
 
-      // Act & Assert
-      await expect(handler.handle(event, ctx)).rejects.toThrow(
-        new Exception("Invalid token", ExceptionType.BadArgument)
-      );
-    }
-  );
+    // Act & Assert
+    await expect(handler.handle(event, ctx)).rejects.toThrow(
+      new Exception("Invalid token", ExceptionType.BadArgument)
+    );
+  });
 
-  test.concurrent(
-    "should throw an exception when user is not found",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const token = "valid-token";
-      const event = new ConfirmUserMailEvent({ token });
+  test("should throw an exception when user is not found", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const token = "valid-token";
+    const event = new ConfirmUserMailEvent({ token });
 
-      ctx.jwtService.verify = vi
-        .fn()
-        .mockReturnValue({ email: "nonexistent@example.com" });
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(null);
+    ctx.jwtService.verify = vi
+      .fn()
+      .mockReturnValue({ email: "nonexistent@example.com" });
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(null);
 
-      // Act & Assert
-      await expect(handler.handle(event, ctx)).rejects.toThrow(
-        new Exception("User not found", ExceptionType.NotFound)
-      );
-    }
-  );
+    // Act & Assert
+    await expect(handler.handle(event, ctx)).rejects.toThrow(
+      new Exception("User not found", ExceptionType.NotFound)
+    );
+  });
 
-  test.concurrent(
-    "should not update user emailVerified if already verified",
-    async () => {
-      // Arrange
-      const ctx: Context = createTestContext();
-      const user = UserMother.createVerifiedUser();
-      const token = "valid-token";
-      const event = new ConfirmUserMailEvent({ token });
+  test("should not update user emailVerified if already verified", async () => {
+    // Arrange
+    const ctx: Context = createTestContext();
+    const user = UserMother.createVerifiedUser();
+    const token = "valid-token";
+    const event = new ConfirmUserMailEvent({ token });
 
-      ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
-      ctx.userRepository.findByEmail = vi
-        .fn(ctx.userRepository.findByEmail)
-        .mockResolvedValue(user);
+    ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(user);
 
-      // Act
-      await handler.handle(event, ctx);
+    // Act
+    await handler.handle(event, ctx);
 
-      // Assert
-      expect(user.emailVerified).toBeInstanceOf(Date);
-      expect(ctx.userRepository.update).not.toHaveBeenCalled();
-    }
-  );
+    // Assert
+    expect(user.emailVerified).toBeInstanceOf(Date);
+    expect(ctx.userRepository.update).not.toHaveBeenCalled();
+  });
 });
