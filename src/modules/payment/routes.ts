@@ -23,7 +23,7 @@ paymentRoutes.post("/stripe-recharge", async (ctx) => {
   const event = new RechargeCreditsEvent({
     userEmail: customer_details.email,
     amount: {
-      value: amount_subtotal,
+      value: amount_subtotal / 100, // Stripe returns the amount in cents
       type: currency,
     },
   });
