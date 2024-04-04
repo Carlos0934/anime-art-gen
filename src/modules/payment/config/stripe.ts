@@ -14,6 +14,7 @@ export const parseStripeEvent = async (req: Request): Promise<Stripe.Event> => {
   try {
     return stripe.webhooks.constructEvent(body, signature, secret);
   } catch (error) {
+    console.error(error);
     throw new Exception("Invalid request", ExceptionType.Forbidden);
   }
 };

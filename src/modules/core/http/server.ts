@@ -20,6 +20,7 @@ export const createHonoApp = (modules?: (new () => AppModule)[]) => {
       [ExceptionType.Forbidden]: 403,
     };
     if (error instanceof Exception) {
+      console.error(error);
       return ctx.json(
         { message: error.message },
         {
