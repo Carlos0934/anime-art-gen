@@ -11,9 +11,9 @@ export class RechargeCreditsHandler extends Handler<
   eventName = PaymentEvents.RechargeCredits;
 
   async handle(event: RechargeCreditsEvent, ctx: Context): Promise<void> {
-    const { userId, amount } = event.data;
+    const { userEmail, amount } = event.data;
 
-    const user = await ctx.userRepository.findByEmail(userId);
+    const user = await ctx.userRepository.findByEmail(userEmail);
 
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 
@@ -27,7 +27,7 @@ export class RechargeCreditsHandler extends Handler<
 
 export class RechargeCreditsEvent extends Event {
   name = PaymentEvents.RechargeCredits;
-  constructor(public readonly data: { userId: string; amount: Amount }) {
+  constructor(public readonly data: { userEmail: string; amount: Amount }) {
     super();
   }
 }

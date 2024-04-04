@@ -7,7 +7,6 @@ import {
   RechargeCreditsEvent,
   RechargeCreditsHandler,
 } from "../handlers/recharge-credits-handler";
-import { CREDITS_CONVERSION_RATE } from "@/core/utils/credits-converter/interface";
 
 describe.concurrent("RechargeCreditsHandler", () => {
   const handler: RechargeCreditsHandler = new RechargeCreditsHandler();
@@ -16,13 +15,13 @@ describe.concurrent("RechargeCreditsHandler", () => {
     // Arrange
     const ctx = createTestContext();
     const user = UserMother.createDefaultUser();
-    const userId = user.id;
+
     const creditsToAdd = 100;
     const amount = {
-      value: CREDITS_CONVERSION_RATE * creditsToAdd,
-      type: "USD" as const,
+      value: 1000,
+      type: "USD",
     };
-    const event = new RechargeCreditsEvent({ userId, amount });
+    const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
     ctx.userRepository.findByEmail = vi
       .fn(ctx.userRepository.findByEmail)
@@ -31,7 +30,6 @@ describe.concurrent("RechargeCreditsHandler", () => {
     ctx.userRepository.update = vi.fn(ctx.userRepository.update);
 
     ctx.creditsConverter.convertToCredits = vi.fn(() => creditsToAdd);
-
     // Act
     await handler.handle(event, ctx);
 
@@ -43,13 +41,16 @@ describe.concurrent("RechargeCreditsHandler", () => {
   test("should throw an error when provided with an invalid user ID", async () => {
     // Arrange
     const ctx = createTestContext();
-    const userId = "invalid_user_id";
+    const invalidUserMail = "invalid@example.com";
     const creditsToAdd = 100;
     const amount = {
-      value: CREDITS_CONVERSION_RATE * creditsToAdd,
-      type: "USD" as const,
+      value: 10000,
+      type: "USD",
     };
-    const event = new RechargeCreditsEvent({ userId, amount });
+    const event = new RechargeCreditsEvent({
+      userEmail: invalidUserMail,
+      amount,
+    });
 
     ctx.userRepository.findByEmail = vi
       .fn(ctx.userRepository.findByEmail)
@@ -65,14 +66,14 @@ describe.concurrent("RechargeCreditsHandler", () => {
     // Arrange
     const ctx = createTestContext();
     const user = UserMother.createDefaultUser();
-    const userId = user.id;
+
     const creditsToAdd = 100;
     const amount = {
       value: creditsToAdd,
-      type: "EUR" as const,
-    } as any; // EUR is not supported
+      type: "EUR",
+    };
 
-    const event = new RechargeCreditsEvent({ userId, amount });
+    const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
     ctx.userRepository.findByEmail = vi
       .fn(ctx.userRepository.findByEmail)
@@ -81,7 +82,6 @@ describe.concurrent("RechargeCreditsHandler", () => {
     ctx.creditsConverter.convertToCredits = vi.fn(() => {
       throw new Exception("Unsupported currency", ExceptionType.Forbidden);
     });
-
     // Act & Assert
     await expect(handler.handle(event, ctx)).rejects.toThrow(
       new Exception("Unsupported currency", ExceptionType.Forbidden)
