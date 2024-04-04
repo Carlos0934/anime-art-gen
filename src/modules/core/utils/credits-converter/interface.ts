@@ -2,13 +2,16 @@ import { Exception, ExceptionType } from "@/core/exception";
 
 export type Amount = {
   value: number;
-  type: "USD";
+  type: string;
 };
 
-const CREDITS_CONVERSION_RATE = 300; // 1 USD = 300 credits
+export const CREDITS_CONVERSION_RATE = 300; // 1 USD = 300 credits
+export const SUPPORTED_CURRENCIES = ["USD"];
 export class CreditsConverter {
   convertToCredits(amount: Amount): number {
-    if (amount.type !== "USD") {
+    const isSupportedCurrency = SUPPORTED_CURRENCIES.includes(amount.type);
+
+    if (!isSupportedCurrency) {
       throw new Exception("Unsupported currency", ExceptionType.Forbidden);
     }
 
