@@ -7,8 +7,8 @@ import { eventBus } from "../eventBus";
 export const createHonoApp = (modules?: (new () => AppModule)[]) => {
   const app = new Hono();
 
-  app.get("/", async (ctx) => {
-    return ctx.json({ message: "Hello, World!" });
+  app.get("/health", async (ctx) => {
+    return ctx.json({ message: "OK" });
   });
 
   app.onError((error, ctx) => {

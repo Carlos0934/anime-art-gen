@@ -1,5 +1,5 @@
 import { Context } from "@/core/context";
-import { CreditsConverter } from "@/core/utils/credits-converter/interface";
+
 import { vi } from "vitest";
 
 export const createTestContext = (): Context => {
