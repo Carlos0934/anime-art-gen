@@ -8,8 +8,9 @@
     "strict": true,                                    
     "baseUrl": "./src",
    "paths": {
-    "@/core/*": ["./modules/core/*"],
+      "@/core/*": ["./modules/core/*"],
       "@/auth/*": ["./modules/auth/*"],
+      "@/payment/*": ["./modules/payment/*"]
       
    }
   }
