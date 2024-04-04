@@ -6,7 +6,7 @@ import { PasswordHasher } from "./utils/password-hasher/interface";
 import { CryptoPasswordHasher } from "./utils/password-hasher/crypto-password-hasher";
 import { JwtService } from "./utils/jwt-service/jwt-service";
 import { SesMailer } from "./utils/mailer/ses-mailer";
-import { CreditsConverter } from "./utils/credits-converter/interface";
+import { CreditsConverter } from "./utils/credits-converter/converter";
 
 export type Context = {
   readonly userRepository: UserRepository;

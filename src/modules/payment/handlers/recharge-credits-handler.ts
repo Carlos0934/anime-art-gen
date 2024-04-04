@@ -2,7 +2,7 @@ import { Event, Handler } from "@/core/handler";
 import { PaymentEvents } from "../events";
 import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
-import { Amount } from "@/core/utils/credits-converter/interface";
+import { Amount } from "@/core/utils/credits-converter/converter";
 
 export class RechargeCreditsHandler extends Handler<
   RechargeCreditsEvent,

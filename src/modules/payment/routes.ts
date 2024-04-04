@@ -7,7 +7,7 @@ import { parseStripeEvent } from "./config/stripe";
 const paymentRoutes = new Hono();
 
 paymentRoutes.post("/stripe-recharge", async (ctx) => {
-  const { type, data } = await parseStripeEvent(ctx.req.raw);
+  const { type, data } = await parseStripeEvent(ctx.req);
 
   if (type !== "checkout.session.completed") {
     return ctx.json({ message: "Invalid request" }, 400);
