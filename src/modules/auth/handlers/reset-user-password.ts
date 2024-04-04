@@ -24,7 +24,7 @@ export class ResetUserPasswordHandler extends Handler<
     if (!user || !user.password)
       throw new Exception("User not found", ExceptionType.NotFound);
 
-    const passwordMatch = ctx.passwordHasher.comparePassword(
+    const passwordMatch = await ctx.passwordHasher.comparePassword(
       oldPassword,
       user.password
     );
@@ -32,7 +32,7 @@ export class ResetUserPasswordHandler extends Handler<
     if (!passwordMatch)
       throw new Exception("Invalid password", ExceptionType.Unauthorized);
 
-    user.password = ctx.passwordHasher.hashPassword(newPassword);
+    user.password = await ctx.passwordHasher.hashPassword(newPassword);
 
     await ctx.userRepository.update(user);
   }

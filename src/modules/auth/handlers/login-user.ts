@@ -32,7 +32,7 @@ export class LoginUserHandler extends Handler<
       throw new InvalidCredentialsException();
     }
 
-    const passwordMatch = context.passwordHasher.comparePassword(
+    const passwordMatch = await context.passwordHasher.comparePassword(
       password,
       user.password
     );
