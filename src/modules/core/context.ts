@@ -9,6 +9,8 @@ import { SesMailer } from "./utils/mailer/ses-mailer";
 import { CreditsConverter } from "./utils/credits-converter/converter";
 import { ImageGeneratorClient } from "./utils/image-generator-client/interface";
 import { ReplicateImageGeneratorClient } from "./utils/image-generator-client/replicate-image-generator-client";
+import { QueueService } from "./utils/queue-service/interface";
+import { SQSQueueService } from "./utils/queue-service/sqs-queue-service";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -16,6 +18,7 @@ export type Context = {
   readonly passwordHasher: PasswordHasher;
   readonly jwtService: JwtService;
   readonly creditsConverter: CreditsConverter;
+  readonly queueService: QueueService;
   readonly imageGeneratorClient: ImageGeneratorClient;
 };
 
@@ -25,6 +28,7 @@ export const createContext = (): Context => {
   const cryptoPasswordHasher = new CryptoPasswordHasher();
   const jwtService = new JwtService();
   const creditsConverter = new CreditsConverter();
+  const queueService = new SQSQueueService();
   const imageGeneratorClient = new ReplicateImageGeneratorClient();
 
   return {
@@ -34,5 +38,6 @@ export const createContext = (): Context => {
     jwtService,
     creditsConverter,
     imageGeneratorClient,
+    queueService,
   };
 };

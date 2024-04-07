@@ -1,4 +1,4 @@
 export enum GenerationEvents {
-  StartGeneration = "generation.start-generation",
-  GenerationComplete = "generation.generation-complete",
+  ImageGenerationStart = "generation.image-generation-start",
+  ImageGenerationComplete = "generation.image-generation-complete",
 }

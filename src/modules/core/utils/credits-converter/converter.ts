@@ -5,7 +5,7 @@ export type Amount = {
   type: string;
 };
 
-export const CREDITS_CONVERSION_RATE = 300; // 1 USD = 300 credits
+export const CREDITS_CONVERSION_RATE = 100; // 1 USD = 100 credits
 export const SUPPORTED_CURRENCIES = ["USD"];
 export class CreditsConverter {
   convertToCredits(amount: Amount): number {

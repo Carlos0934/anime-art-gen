@@ -26,6 +26,9 @@ export const createTestContext = (): Context => {
     creditsConverter: {
       convertToCredits: vi.fn(),
     },
+    queueService: {
+      push: vi.fn(),
+    },
     imageGeneratorClient: {
       generateImage: vi.fn(),
     },
