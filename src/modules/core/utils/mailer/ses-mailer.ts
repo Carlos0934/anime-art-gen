@@ -1,4 +1,4 @@
-import { SES } from "aws-sdk";
+import { SES, SendEmailCommand } from "@aws-sdk/client-ses";
 import { Mailer, MailTemplate, templates } from "./interface";
 
 export class SesMailer implements Mailer {
@@ -13,29 +13,26 @@ export class SesMailer implements Mailer {
 
   async send(data: { to: string; template: MailTemplate }): Promise<void> {
     const template = templates[data.template.name];
-    if (!template) {
-      throw new Error("Template not found");
-    }
+    if (!template) throw new Error("Template not found");
 
-    await this.ses
-      .sendEmail({
-        Destination: {
-          ToAddresses: [data.to],
-        },
-        Message: {
-          Body: {
-            Html: {
-              Charset: "UTF-8",
-              Data: template.html(data.template.data),
-            },
-          },
-          Subject: {
+    const command = new SendEmailCommand({
+      Destination: {
+        ToAddresses: [data.to],
+      },
+      Message: {
+        Body: {
+          Html: {
             Charset: "UTF-8",
-            Data: template.subject,
+            Data: template.html(data.template.data),
           },
         },
-        Source: process.env.EMAIL_FROM!,
-      })
-      .promise();
+        Subject: {
+          Charset: "UTF-8",
+          Data: template.subject,
+        },
+      },
+      Source: process.env.EMAIL_FROM!,
+    });
+    await this.ses.send(command);
   }
 }

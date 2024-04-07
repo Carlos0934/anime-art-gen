@@ -1,8 +1,16 @@
-type ImageGenerationMetadata = {
+export enum ImageModels {
+  AniImagineXL = "ani-imagine-xl",
+}
+
+export enum ImageQualities {
+  Low = 1,
+  Medium = 2,
+  High = 3,
+}
+
+export type ImageGenerationMetadata = {
   width: number;
   height: number;
-  format: string;
-  size: number;
   createdAt: string;
   input: {
     prompt: string;
@@ -10,9 +18,9 @@ type ImageGenerationMetadata = {
     strength: number;
     steps: number;
     seed: number;
-    model: string;
-    scheduler: string;
-    refiner?: string;
+    model: ImageModels;
+    quality: ImageQualities;
+    style: string;
   };
 };
 

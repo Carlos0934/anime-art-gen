@@ -7,6 +7,8 @@ import { CryptoPasswordHasher } from "./utils/password-hasher/crypto-password-ha
 import { JwtService } from "./utils/jwt-service/jwt-service";
 import { SesMailer } from "./utils/mailer/ses-mailer";
 import { CreditsConverter } from "./utils/credits-converter/converter";
+import { ImageGeneratorClient } from "./utils/image-generator-client/interface";
+import { ReplicateImageGeneratorClient } from "./utils/image-generator-client/replicate-image-generator-client";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -14,6 +16,7 @@ export type Context = {
   readonly passwordHasher: PasswordHasher;
   readonly jwtService: JwtService;
   readonly creditsConverter: CreditsConverter;
+  readonly imageGeneratorClient: ImageGeneratorClient;
 };
 
 export const createContext = (): Context => {
@@ -22,11 +25,14 @@ export const createContext = (): Context => {
   const cryptoPasswordHasher = new CryptoPasswordHasher();
   const jwtService = new JwtService();
   const creditsConverter = new CreditsConverter();
+  const imageGeneratorClient = new ReplicateImageGeneratorClient();
+
   return {
     userRepository,
     mailer: resendMailer,
     passwordHasher: cryptoPasswordHasher,
     jwtService,
     creditsConverter,
+    imageGeneratorClient,
   };
 };

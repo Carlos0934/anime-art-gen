@@ -15,7 +15,6 @@ paymentRoutes.post("/stripe-recharge", async (ctx) => {
   const result = StripeRechargeSchema.safeParse(data.object);
 
   if (!result.success) {
-    console.log(result.error.issues);
     return ctx.json({ message: "Invalid data" }, 400);
   }
   const { customer_details, amount_subtotal, currency } = result.data;

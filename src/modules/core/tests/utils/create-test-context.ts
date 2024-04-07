@@ -26,5 +26,8 @@ export const createTestContext = (): Context => {
     creditsConverter: {
       convertToCredits: vi.fn(),
     },
+    imageGeneratorClient: {
+      generateImage: vi.fn(),
+    },
   };
 };
