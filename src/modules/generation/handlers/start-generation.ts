@@ -1,8 +1,8 @@
-import { Event, Handler } from "@/core/handler";
+import { Handler } from "@/core/handler";
 import {
   GenerationEvents,
   RequestGenerationEvent,
-  RequestGenerationStartEvent,
+  RequestGenerationStartedEvent,
 } from "../events";
 import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
@@ -28,7 +28,7 @@ export class StartGenerationRequestHandler extends Handler<
 
     ctx.tasksUsersKvStore.set(taskId, { taskId, userId });
 
-    const startGenerationEvent = new RequestGenerationStartEvent({
+    const startGenerationEvent = new RequestGenerationStartedEvent({
       userId,
       taskId,
     });

@@ -16,7 +16,7 @@ import { DrizzleImageGenerationRepository } from "./repositories/drizzle/image-g
 import { KVStore } from "./utils/kv-store/interface";
 import { DynamoDBKvStore } from "./utils/kv-store/dynamodb-kv-store";
 import { FileService } from "./utils/file-service/interface";
-import { S3FileService } from "./utils/pub-notification-service/s3-file-service";
+import { S3FileService } from "./utils/file-service/s3-file-service";
 
 export type Context = {
   readonly userRepository: UserRepository;

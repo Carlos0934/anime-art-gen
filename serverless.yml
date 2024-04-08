@@ -40,6 +40,8 @@ provider:
     IMAGE_GENERATION_REQUEST_TOPIC: ${env:IMAGE_GENERATION_REQUEST_TOPIC}
     IMAGE_GENERATION_START_TOPIC: ${env:IMAGE_GENERATION_START_TOPIC}
     IMAGE_GENERATION_SUCCESS_TOPIC: ${env:IMAGE_GENERATION_SUCCESS_TOPIC}
+    IMAGE_GENERATION_QUEUE_URL: ${env:IMAGE_GENERATION_QUEUE_URL}
+    BUCKET_NAME: ${env:BUCKET_NAME}
 
   iam:
       role:
@@ -81,10 +83,7 @@ functions:
   start-generation:
     handler: dist/start-generation.handler
     events:
-       - sqs: ${env:IMAGE_GENERATION_START_TOPIC}
+       - sqs: ${env:IMAGE_GENERATION_QUEUE_URL}
     
   
-  complete-generation:
-    handler: dist/complete-generation.handler
-    events:
-       - sqs: ${env:IMAGE_GENERATION_SUCCESS_TOPIC}
+ 

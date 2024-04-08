@@ -8,6 +8,7 @@ export enum GenerationEvents {
   ImageGenerationComplete = "generation.image-generation-complete",
 }
 
+// For when the image generation request is received and is published to the the queue
 export class RequestGenerationEvent extends Event {
   name = GenerationEvents.ImageGenerationRequest;
   constructor(
@@ -15,33 +16,9 @@ export class RequestGenerationEvent extends Event {
   ) {
     super();
   }
-
-  static fromJSON(data: any): RequestGenerationEvent {
-    return new RequestGenerationEvent({
-      userId: data.userId,
-      params: {
-        height: data.params.height,
-        width: data.params.width,
-        prompt: data.params.prompt,
-        negativePrompt: data.params.negativePrompt,
-        strength: data.params.strength,
-        steps: data.params.steps,
-        seed: data.params.seed,
-        model: data.params.model,
-        quality: data.params.quality,
-        style: data.params.style,
-      },
-    });
-  }
 }
 
-export class RequestGenerationStartEvent extends Event {
-  name = GenerationEvents.ImageGenerationStart;
-  constructor(public readonly data: { userId: string; taskId: string }) {
-    super();
-  }
-}
-
+// For when the image generation is complete and callback is received from the webhook
 export class RequestGenerationCompleteEvent extends Event {
   name = GenerationEvents.ImageGenerationComplete;
   constructor(
@@ -61,6 +38,22 @@ export class RequestGenerationCompleteEvent extends Event {
         style?: string;
       };
     }
+  ) {
+    super();
+  }
+}
+
+export class RequestGenerationStartedEvent extends Event {
+  name = GenerationEvents.ImageGenerationStart;
+  constructor(public readonly data: { userId: string; taskId: string }) {
+    super();
+  }
+}
+
+export class RequestGenerationCompletedEvent extends Event {
+  name = GenerationEvents.ImageGenerationComplete;
+  constructor(
+    public readonly data: { userId: string; taskId: string; imageId: string }
   ) {
     super();
   }

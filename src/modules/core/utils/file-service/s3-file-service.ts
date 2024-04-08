@@ -1,5 +1,5 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { FileService } from "../file-service/interface";
+import { FileService } from "./interface";
 
 export class S3FileService implements FileService {
   private readonly s3: S3Client;

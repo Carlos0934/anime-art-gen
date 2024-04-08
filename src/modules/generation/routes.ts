@@ -41,6 +41,7 @@ generationRoutes.post(
 
     const event = new RequestGenerationCompleteEvent({
       imageUrl: output,
+
       taskId: id,
       input: {
         height: input.height,

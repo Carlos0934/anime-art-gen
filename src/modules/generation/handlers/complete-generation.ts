@@ -1,5 +1,9 @@
 import { Handler } from "@/core/handler";
-import { GenerationEvents, RequestGenerationCompleteEvent } from "../events";
+import {
+  GenerationEvents,
+  RequestGenerationCompletedEvent,
+  RequestGenerationCompleteEvent,
+} from "../events";
 import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
 import { ImageGeneration } from "@/core/entities/image-generation";
@@ -48,6 +52,13 @@ export class CompleteGenerationHandler extends Handler<
 
     await ctx.tasksUsersKvStore.delete(taskId);
 
+    const requestGenerationCompleteEvent = new RequestGenerationCompletedEvent({
+      userId,
+      taskId,
+      imageId: image.id,
+    });
+
+    await ctx.pubNotificationService.publish(requestGenerationCompleteEvent);
     return;
   }
 }
