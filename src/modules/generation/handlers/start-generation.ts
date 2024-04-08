@@ -11,7 +11,7 @@ export class StartGenerationRequestHandler extends Handler<
   RequestGenerationEvent,
   void
 > {
-  eventName: string = GenerationEvents.ImageGenerationStart;
+  eventName: string = GenerationEvents.ImageGenerationRequest;
 
   async handle(
     { data: { params, userId } }: RequestGenerationEvent,
