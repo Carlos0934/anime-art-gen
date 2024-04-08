@@ -43,6 +43,25 @@ provider:
             Action:
               - "s3:*"
             Resource: "*"
+          - Effect: "Allow"
+            Action:
+              - "sns:*"
+            Resource: "*"
+
+          - Effect: "Allow"
+            Action:
+              - "sqs:*"
+            Resource: "*"
+
+          - Effect: "Allow"
+            Action:
+              - "ses:*"
+            Resource: "*"
+
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:*"
+            Resource: "*"
 
 
 functions:
@@ -56,6 +75,6 @@ functions:
   start-generation:
     handler: dist/startGeneration.handler
     events:
-       - sqs: arn:aws:sqs:us-east-1:556737114908:generation-requests
+       - sqs: arn:aws:sqs:us-east-1:556737114908:image_generation_requests
     
   

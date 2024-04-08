@@ -7,6 +7,7 @@
     "migrate": "drizzle-kit push:sqlite"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.137",
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
@@ -24,6 +25,7 @@
     "@hono/node-server": "^1.9.1",
     "@hono/zod-validator": "^0.2.1",
     "@libsql/client": "^0.6.0",
+    "aws-lambda": "^1.0.7",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.6",
     "hono": "^4.1.7",
