@@ -14,8 +14,8 @@ export class EventBus {
     return EventBus.instance;
   }
 
-  registerHandler(name: string, handler: Handler<Event, unknown>) {
-    this.handlers[name] = handler;
+  registerHandler(handler: Handler<Event, unknown>) {
+    this.handlers[handler.eventName] = handler;
   }
 
   getHandler(name: string) {

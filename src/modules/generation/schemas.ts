@@ -14,6 +14,11 @@ export const RequestGenerationSchema = z.object({
   style: z.string().optional(),
 });
 
+export const RequestEventGenerationCompleteSchema = z.object({
+  taskId: z.string(),
+  imageUrl: z.string(),
+  input: RequestGenerationSchema,
+});
 export const RequestGenerationCallbackSchema = z.object({
   id: z.string(),
   output: z.string(),

@@ -35,5 +35,13 @@ export const createTestContext = (): Context => {
     pubNotificationService: {
       publish: vi.fn(),
     },
+    fileService: {
+      upload: vi.fn(),
+    },
+    tasksUsersKvStore: {
+      delete: vi.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
+    },
   };
 };

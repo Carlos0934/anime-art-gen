@@ -15,6 +15,8 @@ import { ImageGenerationRepository } from "./repositories/image-generation-repos
 import { DrizzleImageGenerationRepository } from "./repositories/drizzle/image-generation-repository";
 import { KVStore } from "./utils/kv-store/interface";
 import { DynamoDBKvStore } from "./utils/kv-store/dynamodb-kv-store";
+import { FileService } from "./utils/file-service/interface";
+import { S3FileService } from "./utils/pub-notification-service/s3-file-service";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -25,6 +27,7 @@ export type Context = {
   readonly pubNotificationService: PubNotificationService;
   readonly imageGeneratorClient: ImageGeneratorClient;
   readonly imageGenerationRepository: ImageGenerationRepository;
+  readonly fileService: FileService;
   readonly tasksUsersKvStore: KVStore<{
     taskId: string;
     userId: string;
@@ -40,6 +43,7 @@ export const createContext = (): Context => {
   const imageGeneratorClient = new ReplicateImageGeneratorClient();
   const pubNotificationService = new SNSPubNotificationService();
   const imageGenerationRepository = new DrizzleImageGenerationRepository(db);
+  const fileService = new S3FileService();
   const tasksUsersKvStore = new DynamoDBKvStore<{
     taskId: string;
     userId: string;
@@ -54,6 +58,7 @@ export const createContext = (): Context => {
     imageGeneratorClient,
     pubNotificationService: pubNotificationService,
     imageGenerationRepository,
+    fileService,
     tasksUsersKvStore,
   };
 };

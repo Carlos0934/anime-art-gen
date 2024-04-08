@@ -46,7 +46,7 @@ export class CompleteGenerationHandler extends Handler<
 
     await ctx.imageGenerationRepository.save(image);
 
-    await ctx.pubNotificationService.publish(event);
+    await ctx.tasksUsersKvStore.delete(taskId);
 
     return;
   }

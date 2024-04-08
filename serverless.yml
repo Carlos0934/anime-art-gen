@@ -81,6 +81,10 @@ functions:
   start-generation:
     handler: dist/start-generation.handler
     events:
-       - sqs: arn:aws:sqs:us-east-1:556737114908:image_generation_requests
+       - sqs: ${env:IMAGE_GENERATION_START_TOPIC}
     
   
+  complete-generation:
+    handler: dist/complete-generation.handler
+    events:
+       - sqs: ${env:IMAGE_GENERATION_SUCCESS_TOPIC}

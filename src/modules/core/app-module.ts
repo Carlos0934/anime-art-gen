@@ -23,9 +23,6 @@ export abstract class AppModule {
 
   register(app: Hono, eventBus: EventBus) {
     app.route(this.basePath, this.routes);
-    this.handlers.forEach((handler) => {
-      const instance = new handler();
-      eventBus.registerHandler(instance.eventName, instance);
-    });
+    this.handlers.forEach((handler) => eventBus.registerHandler(new handler()));
   }
 }
