@@ -1,5 +1,6 @@
 import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
+import { jwt } from "hono/jwt";
 import {
   RequestGenerationCallbackSchema,
   RequestGenerationSchema,
@@ -65,11 +66,11 @@ generationRoutes.post(
 
 generationRoutes.post(
   "/generate-image",
+  jwt({ secret: process.env.JWT_SECRET! }),
   zValidator("json", RequestGenerationSchema),
   async (ctx) => {
-    const userId = crypto.randomUUID();
-
     const params = ctx.req.valid("json");
+    const { userId } = ctx.get("jwtPayload") as { userId: string };
 
     const event = new RequestGenerationEvent({ userId, params });
     await eventBus.publish(event);
