@@ -53,3 +53,9 @@ functions:
           path: "{proxy+}"
           method: ANY
 
+  start-generation:
+    handler: dist/startGeneration.handler
+    events:
+       - sqs: arn:aws:sqs:us-east-1:556737114908:generation-requests
+    
+  

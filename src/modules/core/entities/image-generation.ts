@@ -11,16 +11,16 @@ export enum ImageQualities {
 export type ImageGenerationMetadata = {
   width: number;
   height: number;
-  createdAt: string;
+
   input: {
     prompt: string;
-    negativePrompt: string;
+    negativePrompt?: string;
     strength: number;
     steps: number;
     seed: number;
     model: ImageModels;
     quality: ImageQualities;
-    style: string;
+    style?: string;
   };
 };
 
@@ -29,21 +29,24 @@ export class ImageGeneration {
   url: string;
   userId: string;
   metadata: ImageGenerationMetadata;
-
+  createdAt: Date;
   constructor({
-    accountId,
+    userId,
     id,
     metadata,
     url,
+    createdAt,
   }: {
     id: string;
     url: string;
-    accountId: string;
+    userId: string;
     metadata: ImageGenerationMetadata;
+    createdAt: string | Date | number;
   }) {
     this.id = id;
     this.url = url;
-    this.userId = accountId;
+    this.userId = userId;
     this.metadata = metadata;
+    this.createdAt = new Date(createdAt);
   }
 }

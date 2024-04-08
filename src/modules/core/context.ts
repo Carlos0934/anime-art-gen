@@ -9,8 +9,10 @@ import { SesMailer } from "./utils/mailer/ses-mailer";
 import { CreditsConverter } from "./utils/credits-converter/converter";
 import { ImageGeneratorClient } from "./utils/image-generator-client/interface";
 import { ReplicateImageGeneratorClient } from "./utils/image-generator-client/replicate-image-generator-client";
-import { QueueService } from "./utils/queue-service/interface";
-import { SQSQueueService } from "./utils/queue-service/sqs-queue-service";
+import { PubNotificationService } from "./utils/pub-notification-service/interface";
+import { SNSPubNotificationService } from "./utils/pub-notification-service/sns-pub-notification-service";
+import { ImageGenerationRepository } from "./repositories/image-generation-repository";
+import { DrizzleImageGenerationRepository } from "./repositories/drizzle/image-generation-repository";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -18,8 +20,9 @@ export type Context = {
   readonly passwordHasher: PasswordHasher;
   readonly jwtService: JwtService;
   readonly creditsConverter: CreditsConverter;
-  readonly queueService: QueueService;
+  readonly pubNotificationService: PubNotificationService;
   readonly imageGeneratorClient: ImageGeneratorClient;
+  readonly imageGenerationRepository: ImageGenerationRepository;
 };
 
 export const createContext = (): Context => {
@@ -28,9 +31,9 @@ export const createContext = (): Context => {
   const cryptoPasswordHasher = new CryptoPasswordHasher();
   const jwtService = new JwtService();
   const creditsConverter = new CreditsConverter();
-  const queueService = new SQSQueueService();
   const imageGeneratorClient = new ReplicateImageGeneratorClient();
-
+  const pubNotificationService = new SNSPubNotificationService();
+  const imageGenerationRepository = new DrizzleImageGenerationRepository(db);
   return {
     userRepository,
     mailer: resendMailer,
@@ -38,6 +41,7 @@ export const createContext = (): Context => {
     jwtService,
     creditsConverter,
     imageGeneratorClient,
-    queueService,
+    pubNotificationService: pubNotificationService,
+    imageGenerationRepository,
   };
 };
