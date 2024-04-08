@@ -1,6 +1,7 @@
 {
   "scripts": {
     "build": "esbuild --bundle --minify  --outfile=./dist/api.js  --platform=node --target=node20 ./src/functions/api.ts",
+    "postbuild": "esbuild --bundle --minify  --outfile=./dist/start-generations.js  --platform=node --target=node20 ./src/functions/start-generations.ts",
     "test": "vitest",
     "dev": "tsx watch  --ignore node_modules ./src/index.ts  ",
     "generate": "drizzle-kit generate:sqlite",

@@ -10,7 +10,7 @@ export class SNSPubNotificationService implements PubNotificationService {
     [GenerationEvents.ImageGenerationRequest]:
       process.env.IMAGE_GENERATION_REQUEST_TOPIC!,
     [GenerationEvents.ImageGenerationStart]:
-      process.env.IMAGE_GENERATION_FAILURE_TOPIC!,
+      process.env.IMAGE_GENERATION_START_TOPIC!,
     [GenerationEvents.ImageGenerationComplete]:
       process.env.IMAGE_GENERATION_SUCCESS_TOPIC!,
   };
