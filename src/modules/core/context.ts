@@ -13,6 +13,8 @@ import { PubNotificationService } from "./utils/pub-notification-service/interfa
 import { SNSPubNotificationService } from "./utils/pub-notification-service/sns-pub-notification-service";
 import { ImageGenerationRepository } from "./repositories/image-generation-repository";
 import { DrizzleImageGenerationRepository } from "./repositories/drizzle/image-generation-repository";
+import { KVStore } from "./utils/kv-store/interface";
+import { DynamoDBKvStore } from "./utils/kv-store/dynamodb-kv-store";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -23,6 +25,10 @@ export type Context = {
   readonly pubNotificationService: PubNotificationService;
   readonly imageGeneratorClient: ImageGeneratorClient;
   readonly imageGenerationRepository: ImageGenerationRepository;
+  readonly tasksUsersKvStore: KVStore<{
+    taskId: string;
+    userId: string;
+  }>;
 };
 
 export const createContext = (): Context => {
@@ -34,6 +40,11 @@ export const createContext = (): Context => {
   const imageGeneratorClient = new ReplicateImageGeneratorClient();
   const pubNotificationService = new SNSPubNotificationService();
   const imageGenerationRepository = new DrizzleImageGenerationRepository(db);
+  const tasksUsersKvStore = new DynamoDBKvStore<{
+    taskId: string;
+    userId: string;
+  }>("tasks-users");
+
   return {
     userRepository,
     mailer: resendMailer,
@@ -43,5 +54,6 @@ export const createContext = (): Context => {
     imageGeneratorClient,
     pubNotificationService: pubNotificationService,
     imageGenerationRepository,
+    tasksUsersKvStore,
   };
 };

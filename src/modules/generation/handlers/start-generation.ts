@@ -5,7 +5,6 @@ import {
   RequestGenerationStartEvent,
 } from "../events";
 import { Context } from "@/core/context";
-import { GenerateImageInput } from "@/core/utils/image-generator-client/interface";
 import { Exception, ExceptionType } from "@/core/exception";
 
 export class StartGenerationRequestHandler extends Handler<
@@ -22,9 +21,12 @@ export class StartGenerationRequestHandler extends Handler<
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 
     const { taskId } = await ctx.imageGeneratorClient.generateImage(params);
+
     user.credits -= 1;
 
     await ctx.userRepository.update(user);
+
+    ctx.tasksUsersKvStore.set(taskId, { taskId, userId });
 
     const startGenerationEvent = new RequestGenerationStartEvent({
       userId,

@@ -15,7 +15,14 @@ export class CompleteGenerationHandler extends Handler<
     ctx: Context
   ): Promise<void> {
     const { taskId, imageUrl, input } = event.data;
-    const userId = "extract-from-dynamodb"; // TODO: Extract userId from DynamoDB
+    const result = await ctx.tasksUsersKvStore.get(taskId);
+
+    if (!result) {
+      throw new Exception("Task does not exist", ExceptionType.BadArgument);
+    }
+
+    const { userId } = result;
+
     const image = new ImageGeneration({
       createdAt: new Date(),
       id: crypto.randomUUID(),
