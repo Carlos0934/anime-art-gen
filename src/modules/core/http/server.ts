@@ -29,11 +29,7 @@ export const createHonoApp = (modules?: (new () => AppModule)[]) => {
       );
     }
 
-    if (error instanceof Response) {
-      return ctx.json({ message: error.statusText }, { status: error.status });
-    }
-
-    return ctx.json({ message: "Internal server error" }, { status: 500 });
+    throw error;
   });
 
   if (modules) {
