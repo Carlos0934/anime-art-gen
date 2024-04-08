@@ -79,7 +79,7 @@ functions:
           method: ANY
 
   start-generation:
-    handler: dist/startGeneration.handler
+    handler: dist/start-generation.handler
     events:
        - sqs: arn:aws:sqs:us-east-1:556737114908:image_generation_requests
     
