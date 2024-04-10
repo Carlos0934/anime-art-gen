@@ -5,13 +5,13 @@ import { Context } from "@/core/context";
 import { User } from "@/core/entities/user";
 import { UserAlreadyExistException } from "../exceptions/user-already-exist-error";
 
-export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
+export class RegisterUserHandler extends Handler<RegisterUserEvent, void> {
   eventName = AuthEvents.RegisterUser;
 
   async handle(
     event: RegisterUserEvent,
     { userRepository, passwordHasher, mailer, jwtService }: Context
-  ): Promise<User> {
+  ): Promise<void> {
     const userAlreadyExist = await userRepository.userExists(event.data.email);
     if (userAlreadyExist) throw new UserAlreadyExistException(event.data.email);
 
@@ -41,7 +41,6 @@ export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
       },
       to: user.email,
     });
-    return user;
   }
 }
 

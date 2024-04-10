@@ -30,8 +30,8 @@ authRoutes.post(
   async (ctx) => {
     const data = ctx.req.valid("json");
     const event = new RegisterUserEvent(data);
-    const result = await eventBus.publish(event);
-    return ctx.json(result);
+    await eventBus.publish(event);
+    return ctx.json({ message: "User registered" }, 201);
   }
 );
 
