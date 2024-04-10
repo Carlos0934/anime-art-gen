@@ -3,7 +3,7 @@ import {
   RegisterUserEvent,
   RegisterUserHandler,
 } from "../handlers/register-user";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { UserAlreadyExistException } from "../exceptions/user-already-exist-error";
 import { Context } from "@/core/context";

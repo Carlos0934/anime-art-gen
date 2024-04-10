@@ -1,4 +1,11 @@
-import { text, sqliteTable, integer, index } from "drizzle-orm/sqlite-core";
+import { SUPPORTED_CURRENCIES } from "@/core/entities/payment";
+import {
+  text,
+  sqliteTable,
+  integer,
+  real,
+  index,
+} from "drizzle-orm/sqlite-core";
 
 export const users = sqliteTable(
   "users",
@@ -27,17 +34,19 @@ export const imageGenerations = sqliteTable("image_generations", {
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
 });
 
-export const transactions = sqliteTable("transactions", {
+export const payments = sqliteTable("payments", {
   id: text("id").notNull().primaryKey(),
   userId: text("user_id")
     .notNull()
     .references(() => users.id),
-  amount: integer("amount").notNull(),
+  amount: real("amount").notNull(),
+  currency: text("currency", SUPPORTED_CURRENCIES).notNull(),
+  credits: integer("credits").notNull(),
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
 });
 
 export const schema = {
   users,
   imageGenerations,
-  transactions,
+  payments,
 };

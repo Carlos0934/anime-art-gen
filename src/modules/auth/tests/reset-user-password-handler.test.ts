@@ -3,7 +3,7 @@ import {
   ResetUserPasswordEvent,
   ResetUserPasswordHandler,
 } from "../handlers/reset-user-password";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { Exception, ExceptionType } from "@/core/exception";
 

@@ -37,6 +37,9 @@ describe("FailGenerationHandler", () => {
     expect(publishedEvent).toBeInstanceOf(RequestGenerationFailedEvent);
     expect(publishedEvent.data.taskId).toBe(taskId);
     expect(publishedEvent.data.error).toBe(error);
+
+    // Check if the correct task was deleted
+    expect(deleteSpy).toHaveBeenCalledWith(taskId);
   });
 
   test("should not do anything if the task is not found", async () => {

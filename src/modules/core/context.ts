@@ -17,6 +17,8 @@ import { KVStore } from "./utils/kv-store/interface";
 import { DynamoDBKvStore } from "./utils/kv-store/dynamodb-kv-store";
 import { FileService } from "./utils/file-service/interface";
 import { S3FileService } from "./utils/file-service/s3-file-service";
+import { PaymentRepository } from "./repositories/payment-repository";
+import { DrizzlePaymentRepository } from "./repositories/drizzle/payment-repository";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -32,6 +34,7 @@ export type Context = {
     taskId: string;
     userId: string;
   }>;
+  readonly paymentRepository: PaymentRepository;
 };
 
 export const createContext = (): Context => {
@@ -48,7 +51,7 @@ export const createContext = (): Context => {
     taskId: string;
     userId: string;
   }>("tasks_users");
-
+  const paymentRepository = new DrizzlePaymentRepository(db);
   return {
     userRepository,
     mailer: resendMailer,
@@ -60,5 +63,6 @@ export const createContext = (): Context => {
     imageGenerationRepository,
     fileService,
     tasksUsersKvStore,
+    paymentRepository,
   };
 };

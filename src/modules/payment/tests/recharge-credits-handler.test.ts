@@ -1,6 +1,6 @@
 import { describe, test, vi, expect } from "vitest";
 
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { Exception, ExceptionType } from "@/core/exception";
 import {
@@ -11,6 +11,40 @@ import {
 describe.concurrent("RechargeCreditsHandler", () => {
   const handler: RechargeCreditsHandler = new RechargeCreditsHandler();
 
+  test("should create a payment record when recharging credits", async () => {
+    // Arrange
+    const ctx = createTestContext();
+    const user = UserMother.createDefaultUser();
+
+    const creditsToAdd = 100;
+    const amount = {
+      value: 1000,
+      currency: "USD",
+    };
+    const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
+
+    ctx.userRepository.findByEmail = vi
+      .fn(ctx.userRepository.findByEmail)
+      .mockResolvedValue(user);
+
+    ctx.userRepository.update;
+
+    ctx.paymentRepository.save = vi.fn(ctx.paymentRepository.save);
+    ctx.creditsConverter.convertToCredits = vi.fn(() => creditsToAdd);
+    // Act
+    await handler.handle(event, ctx);
+
+    // Assert
+    expect(ctx.paymentRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: user.id,
+        amount: amount.value,
+        currency: amount.currency,
+        credits: creditsToAdd,
+      })
+    );
+  });
+
   test("should recharge credits to the user's account when provided with a valid user ID and credits amount", async () => {
     // Arrange
     const ctx = createTestContext();
@@ -19,7 +53,7 @@ describe.concurrent("RechargeCreditsHandler", () => {
     const creditsToAdd = 100;
     const amount = {
       value: 1000,
-      type: "USD",
+      currency: "USD",
     };
     const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
@@ -42,10 +76,9 @@ describe.concurrent("RechargeCreditsHandler", () => {
     // Arrange
     const ctx = createTestContext();
     const invalidUserMail = "invalid@example.com";
-    const creditsToAdd = 100;
     const amount = {
       value: 10000,
-      type: "USD",
+      currency: "USD",
     };
     const event = new RechargeCreditsEvent({
       userEmail: invalidUserMail,
@@ -70,7 +103,7 @@ describe.concurrent("RechargeCreditsHandler", () => {
     const creditsToAdd = 100;
     const amount = {
       value: creditsToAdd,
-      type: "EUR",
+      currency: "EUR",
     };
 
     const event = new RechargeCreditsEvent({ userEmail: user.email, amount });

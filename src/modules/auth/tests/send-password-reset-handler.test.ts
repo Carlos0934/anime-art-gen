@@ -3,7 +3,7 @@ import {
   SendPasswordResetEvent,
   SendPasswordResetHandler,
 } from "../handlers/send-password-reset";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 
 describe.concurrent("SendPasswordResetHandler", () => {

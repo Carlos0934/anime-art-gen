@@ -6,7 +6,7 @@ import {
 
 import { Context } from "@/core/context";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 
 describe("GetUserProfileHandler", () => {
   const handler: GetUserProfileHandler = new GetUserProfileHandler();
@@ -39,6 +39,7 @@ describe("GetUserProfileHandler", () => {
     ctx.userRepository.findById = vi
       .fn(ctx.userRepository.findById)
       .mockResolvedValue(null);
+
     const event = new GetUserProfileEvent({ userId });
 
     // Act

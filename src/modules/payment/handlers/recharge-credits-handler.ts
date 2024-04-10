@@ -3,6 +3,7 @@ import { PaymentEvents } from "../events";
 import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Amount } from "@/core/utils/credits-converter/converter";
+import { Payment } from "@/core/entities/payment";
 
 export class RechargeCreditsHandler extends Handler<
   RechargeCreditsEvent,
@@ -20,7 +21,16 @@ export class RechargeCreditsHandler extends Handler<
     const credits = ctx.creditsConverter.convertToCredits(amount);
 
     user.credits += credits;
+    const payment = new Payment({
+      id: crypto.randomUUID(),
+      userId: user?.id,
+      amount: amount.value,
+      currency: "USD",
+      credits: credits,
+      createdAt: new Date(),
+    });
 
+    await ctx.paymentRepository.save(payment);
     await ctx.userRepository.update(user);
 
     return credits;

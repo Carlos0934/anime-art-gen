@@ -2,7 +2,7 @@ import { describe, test, vi, expect, beforeEach } from "vitest";
 
 import { LoginUserEvent, LoginUserHandler } from "../handlers/login-user";
 
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { InvalidCredentialsException } from "../exceptions/invalid-credentials-exeception";
 import { UserAlreadyExistException } from "../exceptions/user-already-exist-error";

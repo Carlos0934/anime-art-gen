@@ -3,6 +3,8 @@ import { StripeRechargeSchema } from "./schemas";
 import { eventBus } from "@/core/eventBus";
 import { RechargeCreditsEvent } from "./handlers/recharge-credits-handler";
 import { parseStripeEvent } from "./config/stripe";
+import { GetPaymentHistoryEvent } from "./handlers/get-payment-history";
+import { jwt } from "hono/jwt";
 
 const paymentRoutes = new Hono();
 
@@ -23,7 +25,7 @@ paymentRoutes.post("/stripe-recharge", async (ctx) => {
     userEmail: customer_details.email,
     amount: {
       value: amount_subtotal / 100, // Stripe returns the amount in cents
-      type: currency,
+      currency: currency,
     },
   });
 
@@ -32,4 +34,19 @@ paymentRoutes.post("/stripe-recharge", async (ctx) => {
   return ctx.text(`Recharged ${credits} credits`);
 });
 
+paymentRoutes.get(
+  "/history",
+  jwt({
+    secret: process.env.JWT_SECRET!,
+  }),
+  async (ctx) => {
+    const userId = ctx.get("jwtPayload").userId;
+
+    const event = new GetPaymentHistoryEvent({ userId });
+
+    const result = await eventBus.publish(event);
+
+    return ctx.json(result);
+  }
+);
 export default paymentRoutes;

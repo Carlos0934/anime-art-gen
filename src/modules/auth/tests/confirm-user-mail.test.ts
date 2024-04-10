@@ -3,7 +3,7 @@ import {
   ConfirmUserMailEvent,
   ConfirmUserMailHandler,
 } from "../handlers/confirm-user-mail";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { Exception, ExceptionType } from "@/core/exception";
 import { Context } from "@/core/context";

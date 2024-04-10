@@ -43,5 +43,9 @@ export const createTestContext = (): Context => {
       get: vi.fn(),
       set: vi.fn(),
     },
+    paymentRepository: {
+      save: vi.fn(),
+      getPaymentsByUserId: vi.fn(),
+    },
   };
 };

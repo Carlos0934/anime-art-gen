@@ -10,7 +10,7 @@ import {
 } from "../events";
 import { ImageModels, ImageQualities } from "@/core/entities/image-generation";
 import { User } from "@/core/entities/user";
-import { UserMother } from "@/core/tests/utils/user-mother-";
+import { UserMother } from "@/core/tests/utils/user-mother";
 
 describe("StartGenerationRequestHandler", () => {
   const handler: StartGenerationRequestHandler =
