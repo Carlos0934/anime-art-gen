@@ -44,7 +44,7 @@ authRoutes.get("/verify-email", async (ctx) => {
 
   const event = new ConfirmUserMailEvent({ token });
   await eventBus.publish(event);
-  return ctx.redirect("http://localhost:3000");
+  return ctx.redirect("https://anime-art-gen.com/login");
 });
 
 authRoutes.post(
@@ -65,7 +65,9 @@ authRoutes.get("/reset-password", async (ctx) => {
     return ctx.text("Invalid token");
   }
 
-  return ctx.redirect(`http://localhost:3000/reset-password?token=${token}`);
+  return ctx.redirect(
+    `https://api.anime-art-gen.com/reset-password?token=${token}`
+  );
 });
 
 authRoutes.post(

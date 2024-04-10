@@ -27,11 +27,16 @@ export class RegisterUserHandler extends Handler<RegisterUserEvent, User> {
     await userRepository.save(user);
 
     const token = jwtService.sign({ email: user.email });
+    const base_url = process.env.CONFIRM_EMAIL_CALLBACK_URL
+      ? process.env.CONFIRM_EMAIL_CALLBACK_URL
+      : "http://localhost:3000/auth/verify-email";
+
+    const url = `${base_url}?token=${token}`;
     await mailer.send({
       template: {
         name: "email-verification",
         data: {
-          link: `http://localhost:3000/auth/verify-email?token=${token}`,
+          link: url,
         },
       },
       to: user.email,
