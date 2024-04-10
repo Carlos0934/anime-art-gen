@@ -4,4 +4,5 @@ export enum AuthEvents {
   ConfirmUserMail = "user.confirm-user-mail",
   ResetUserPassword = "user.reset-user-password",
   SendPasswordReset = "user.send-password-reset",
+  GetUserProfile = "user.get-user-profile",
 }

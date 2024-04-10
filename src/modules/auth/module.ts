@@ -5,6 +5,7 @@ import { ConfirmUserMailHandler } from "./handlers/confirm-user-mail";
 import { RegisterUserHandler } from "./handlers/register-user";
 import { ResetUserPasswordHandler } from "./handlers/reset-user-password";
 import { SendPasswordResetHandler } from "./handlers/send-password-reset";
+import { GetUserProfileHandler } from "./handlers/get-user-profile";
 
 export class AuthModule extends AppModule {
   constructor() {
@@ -16,6 +17,7 @@ export class AuthModule extends AppModule {
         RegisterUserHandler,
         ResetUserPasswordHandler,
         SendPasswordResetHandler,
+        GetUserProfileHandler,
       ],
       routes: authRoutes,
     });

@@ -15,6 +15,7 @@ import { ConfirmUserMailEvent } from "./handlers/confirm-user-mail";
 import { SendPasswordResetEvent } from "./handlers/send-password-reset";
 import { ResetUserPasswordEvent } from "./handlers/reset-user-password";
 import { jwt } from "hono/jwt";
+import { GetUserProfileEvent } from "./handlers/get-user-profile";
 
 const authRoutes = new Hono();
 
@@ -88,7 +89,11 @@ authRoutes.get(
     secret: process.env.JWT_SECRET!,
   }),
   async (ctx) => {
-    return ctx.json({ message: "Profile" });
+    const { userId } = ctx.get("jwtPayload") as { userId: string };
+    const event = new GetUserProfileEvent({ userId });
+
+    const result = await eventBus.publish(event);
+    return ctx.json(result);
   }
 );
 export default authRoutes;
