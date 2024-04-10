@@ -63,3 +63,4 @@ jobs:
           IMAGE_GENERATION_QUEUE_URL: ${{ secrets.IMAGE_GENERATION_QUEUE_URL }}
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           CONFIRM_EMAIL_CALLBACK_URL: ${{ secrets.CONFIRM_EMAIL_CALLBACK_URL }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
