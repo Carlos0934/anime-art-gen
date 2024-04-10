@@ -67,4 +67,12 @@ export class UserMother {
   static createVerifiedUser(): User {
     return new UserBuilder().withEmailVerified(new Date()).build();
   }
+
+  static createUnverifiedUser(): User {
+    return new UserBuilder().withEmailVerified(null).build();
+  }
+
+  static createWithCredits(credits: number): User {
+    return new UserBuilder().withCredits(credits).build();
+  }
 }

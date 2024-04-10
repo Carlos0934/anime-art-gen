@@ -19,12 +19,7 @@ export class FailGenerationHandler extends Handler<
     const task = await ctx.tasksUsersKvStore.get(taskId);
     if (!task) return;
 
-    const user = await ctx.userRepository.findById(task.userId);
-    if (!user) return;
-
-    user.credits += 1;
-
-    await ctx.userRepository.update(user);
+    await ctx.tasksUsersKvStore.delete(taskId);
 
     const failGenerationEvent = new RequestGenerationFailedEvent({
       taskId,
