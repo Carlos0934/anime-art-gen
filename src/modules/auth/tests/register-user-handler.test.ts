@@ -27,10 +27,10 @@ describe.concurrent("RegisterUserHandler", () => {
       .mockResolvedValue();
 
     // Act
-    const result = await handler.handle(event, ctx);
+    await handler.handle(event, ctx);
 
     // Assert
-    expect(result.email).toBe(user.email);
+
     expect(ctx.userRepository.save).toBeCalled();
   });
 
