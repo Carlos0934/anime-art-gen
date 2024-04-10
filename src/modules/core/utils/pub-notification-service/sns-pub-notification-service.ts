@@ -7,8 +7,8 @@ import { PubNotificationService } from "./interface";
 export class SNSPubNotificationService implements PubNotificationService {
   private readonly sns: SNS;
   private readonly topicMap: Record<string, string> = {
-    [GenerationEvents.ImageGenerationRequest]:
-      process.env.IMAGE_GENERATION_REQUEST_TOPIC!,
+    [GenerationEvents.ImageGenerationFail]:
+      process.env.IMAGE_GENERATION_ERROR_TOPIC!,
     [GenerationEvents.ImageGenerationStart]:
       process.env.IMAGE_GENERATION_START_TOPIC!,
     [GenerationEvents.ImageGenerationComplete]:

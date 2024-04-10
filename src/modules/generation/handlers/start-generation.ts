@@ -1,26 +1,29 @@
 import { Handler } from "@/core/handler";
 import {
   GenerationEvents,
-  RequestGenerationEvent,
+  StartRequestGenerationEvent,
   RequestGenerationStartedEvent,
 } from "../events";
 import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
 
 export class StartGenerationRequestHandler extends Handler<
-  RequestGenerationEvent,
+  StartRequestGenerationEvent,
   void
 > {
-  eventName: string = GenerationEvents.ImageGenerationRequest;
+  eventName: string = GenerationEvents.ImageGenerationStart;
 
   async handle(
-    { data: { params, userId } }: RequestGenerationEvent,
+    { data: { params, userId } }: StartRequestGenerationEvent,
     ctx: Context
   ): Promise<void> {
     const user = await ctx.userRepository.findById(userId);
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 
-    const { taskId } = await ctx.imageGeneratorClient.generateImage(params);
+    const { taskId } = await ctx.imageGeneratorClient.generateImage(
+      params,
+      userId
+    );
 
     user.credits -= 1;
 

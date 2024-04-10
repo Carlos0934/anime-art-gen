@@ -8,8 +8,9 @@ import {
 import { validateWebhook } from "replicate";
 import { eventBus } from "@/core/eventBus";
 import {
-  RequestGenerationCompleteEvent,
-  RequestGenerationEvent,
+  CompleteRequestGenerationEvent,
+  FailRequestGenerationEvent,
+  StartRequestGenerationEvent,
 } from "./events";
 import {
   ImageModels,
@@ -20,7 +21,7 @@ import {
 const generationRoutes = new Hono();
 
 generationRoutes.post(
-  "/callback",
+  "/callback/:userId",
   zValidator("json", RequestGenerationCallbackSchema),
   async (ctx) => {
     const isValid = await validateWebhook(
@@ -33,16 +34,26 @@ generationRoutes.post(
     }
 
     const data = ctx.req.valid("json");
-    const { id, output, logs, input } = data;
+
+    const { id, output, logs, input, status } = data;
+
+    if (status !== "completed") {
+      const event = new FailRequestGenerationEvent({
+        taskId: id,
+        error: "Image generation failed",
+      });
+      await eventBus.publish(event);
+      return ctx.json({ message: "Image generation failed" }, 400);
+    }
 
     const seed = extractSeedFromLogs(logs);
     const model = ImageModels.AniImagineXL;
     const quality = modelQualityMap[model][input.quality_selector];
     const style = modelStyleMap[model][input.style_selector];
-
-    const event = new RequestGenerationCompleteEvent({
+    const userId = ctx.req.param("userId");
+    const event = new CompleteRequestGenerationEvent({
       imageUrl: output,
-
+      userId,
       taskId: id,
       input: {
         height: input.height,
@@ -66,13 +77,16 @@ generationRoutes.post(
 
 generationRoutes.post(
   "/generate-image",
-  jwt({ secret: process.env.JWT_SECRET! }),
+  jwt({
+    secret: process.env.JWT_SECRET!,
+  }),
   zValidator("json", RequestGenerationSchema),
   async (ctx) => {
     const params = ctx.req.valid("json");
+
     const { userId } = ctx.get("jwtPayload") as { userId: string };
 
-    const event = new RequestGenerationEvent({ userId, params });
+    const event = new StartRequestGenerationEvent({ userId, params });
     await eventBus.publish(event);
 
     return ctx.json({ message: "Image generation started" });

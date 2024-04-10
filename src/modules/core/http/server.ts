@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-
+import { HTTPException } from "hono/http-exception";
 import { Exception, ExceptionType } from "../exception";
 import { AppModule } from "../app-module";
 import { eventBus } from "../eventBus";
@@ -29,12 +29,8 @@ export const createHonoApp = (modules?: (new () => AppModule)[]) => {
       );
     }
 
-    if (error instanceof Response) {
-      return ctx.json({ message: error.statusText }, { status: error.status });
-    }
-
-    if (error instanceof Error) {
-      return ctx.json({ message: error.message }, { status: 500 });
+    if (error instanceof HTTPException && error.res) {
+      return error.res;
     }
 
     return ctx.json({ message: "Internal server error" }, { status: 500 });

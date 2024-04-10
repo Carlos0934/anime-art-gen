@@ -3,14 +3,25 @@ import { Event } from "@/core/handler";
 import { GenerateImageInput } from "@/core/utils/image-generator-client/interface";
 
 export enum GenerationEvents {
-  ImageGenerationRequest = "generation.image-generation-request",
+  ImageGenerationFail = "generation.image-generation-fail",
   ImageGenerationStart = "generation.image-generation-start",
   ImageGenerationComplete = "generation.image-generation-complete",
 }
 
+export class FailRequestGenerationEvent extends Event {
+  name = GenerationEvents.ImageGenerationFail;
+  constructor(
+    public readonly data: {
+      taskId: string;
+      error: string;
+    }
+  ) {
+    super();
+  }
+}
 // For when the image generation request is received and is published to the the queue
-export class RequestGenerationEvent extends Event {
-  name = GenerationEvents.ImageGenerationRequest;
+export class StartRequestGenerationEvent extends Event {
+  name = GenerationEvents.ImageGenerationStart;
   constructor(
     public readonly data: { userId: string; params: GenerateImageInput }
   ) {
@@ -19,12 +30,13 @@ export class RequestGenerationEvent extends Event {
 }
 
 // For when the image generation is complete and callback is received from the webhook
-export class RequestGenerationCompleteEvent extends Event {
+export class CompleteRequestGenerationEvent extends Event {
   name = GenerationEvents.ImageGenerationComplete;
   constructor(
     public readonly data: {
       taskId: string;
       imageUrl: string;
+      userId: string;
       input: {
         height: number;
         width: number;
@@ -39,6 +51,13 @@ export class RequestGenerationCompleteEvent extends Event {
       };
     }
   ) {
+    super();
+  }
+}
+
+export class RequestGenerationFailedEvent extends Event {
+  name = GenerationEvents.ImageGenerationFail;
+  constructor(public readonly data: { taskId: string; error: string }) {
     super();
   }
 }

@@ -2,30 +2,22 @@ import { Handler } from "@/core/handler";
 import {
   GenerationEvents,
   RequestGenerationCompletedEvent,
-  RequestGenerationCompleteEvent,
+  CompleteRequestGenerationEvent,
 } from "../events";
 import { Context } from "@/core/context";
-import { Exception, ExceptionType } from "@/core/exception";
 import { ImageGeneration } from "@/core/entities/image-generation";
 
 export class CompleteGenerationHandler extends Handler<
-  RequestGenerationCompleteEvent,
+  CompleteRequestGenerationEvent,
   void
 > {
   eventName: string = GenerationEvents.ImageGenerationComplete;
 
   async handle(
-    event: RequestGenerationCompleteEvent,
+    event: CompleteRequestGenerationEvent,
     ctx: Context
   ): Promise<void> {
-    const { taskId, imageUrl, input } = event.data;
-    const result = await ctx.tasksUsersKvStore.get(taskId);
-
-    if (!result) {
-      throw new Exception("Task does not exist", ExceptionType.BadArgument);
-    }
-
-    const { userId } = result;
+    const { taskId, imageUrl, input, userId } = event.data;
 
     const image = new ImageGeneration({
       createdAt: new Date(),
@@ -49,8 +41,6 @@ export class CompleteGenerationHandler extends Handler<
     });
 
     await ctx.imageGenerationRepository.save(image);
-
-    await ctx.tasksUsersKvStore.delete(taskId);
 
     const requestGenerationCompleteEvent = new RequestGenerationCompletedEvent({
       userId,

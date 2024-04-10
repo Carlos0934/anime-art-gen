@@ -23,6 +23,7 @@ export const RequestGenerationCallbackSchema = z.object({
   id: z.string(),
   output: z.string(),
   logs: z.string(),
+  status: z.string(),
   input: z.object({
     width: z.number(),
     height: z.number(),

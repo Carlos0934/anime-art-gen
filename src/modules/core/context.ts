@@ -47,7 +47,7 @@ export const createContext = (): Context => {
   const tasksUsersKvStore = new DynamoDBKvStore<{
     taskId: string;
     userId: string;
-  }>("tasks-users");
+  }>("tasks_users");
 
   return {
     userRepository,

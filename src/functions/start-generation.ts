@@ -1,7 +1,7 @@
 import { createContext } from "@/core/context";
 import { EventBus } from "@/core/eventBus";
 import { SNSMessage, SQSEvent } from "aws-lambda";
-import { RequestGenerationEvent } from "modules/generation/events";
+import { StartRequestGenerationEvent } from "modules/generation/events";
 import { StartGenerationRequestHandler } from "modules/generation/handlers/start-generation";
 import { RequestGenerationSchema } from "modules/generation/schemas";
 
@@ -28,7 +28,10 @@ exports.handler = async (event: SQSEvent): Promise<void> => {
       return;
     }
 
-    const event = new RequestGenerationEvent({ userId, params: result.data });
+    const event = new StartRequestGenerationEvent({
+      userId,
+      params: result.data,
+    });
 
     await handler.handle(event, ctx);
   }

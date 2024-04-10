@@ -14,6 +14,7 @@ import { eventBus } from "@/core/eventBus";
 import { ConfirmUserMailEvent } from "./handlers/confirm-user-mail";
 import { SendPasswordResetEvent } from "./handlers/send-password-reset";
 import { ResetUserPasswordEvent } from "./handlers/reset-user-password";
+import { jwt } from "hono/jwt";
 
 const authRoutes = new Hono();
 
@@ -78,6 +79,16 @@ authRoutes.post(
     const event = new ResetUserPasswordEvent(data);
     await eventBus.publish(event);
     return ctx.json({ message: "Password reset" });
+  }
+);
+
+authRoutes.get(
+  "/profile",
+  jwt({
+    secret: process.env.JWT_SECRET!,
+  }),
+  async (ctx) => {
+    return ctx.json({ message: "Profile" });
   }
 );
 export default authRoutes;

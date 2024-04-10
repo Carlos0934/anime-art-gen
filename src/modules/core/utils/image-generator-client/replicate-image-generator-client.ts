@@ -18,9 +18,11 @@ export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
   constructor() {
     this.replicate = new Replicate();
   }
-  async generateImage(data: GenerateImageInput): Promise<{ taskId: string }> {
-    return this.createPrediction(data).catch((err) => {
-      console.error(err);
+  async generateImage(
+    data: GenerateImageInput,
+    userId: string
+  ): Promise<{ taskId: string }> {
+    return this.createPrediction(data, userId).catch(() => {
       throw new Exception(
         "Failed to create prediction",
         ExceptionType.BadArgument
@@ -28,7 +30,7 @@ export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
     });
   }
 
-  private async createPrediction(data: GenerateImageInput) {
+  private async createPrediction(data: GenerateImageInput, userId: string) {
     const { model, version } = this.modelsMap[data.model as ImageModels];
     console.log("model", model);
     const input = {
@@ -43,7 +45,7 @@ export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
       quality_selector: data.quality,
       style_selector: data.style,
     };
-    const callbackUrl = process.env.REPLICATE_CALLBACK_URL;
+    const callbackUrl = process.env.REPLICATE_CALLBACK_URL! + `/${userId}`;
 
     const result = await this.replicate.predictions.create({
       model,

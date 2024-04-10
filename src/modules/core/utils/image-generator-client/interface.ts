@@ -17,5 +17,8 @@ export type GenerateImageInput = {
 };
 
 export interface ImageGeneratorClient {
-  generateImage(data: GenerateImageInput): Promise<{ taskId: string }>;
+  generateImage(
+    data: GenerateImageInput,
+    userId: string
+  ): Promise<{ taskId: string }>;
 }
