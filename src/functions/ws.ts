@@ -15,16 +15,14 @@ const getUserIdFromHeaders = (headers: {
 
   const token = headers.Authorization.slice(7);
 
-  console.log("token", token);
-
   return ctx.jwtService.verify<{ userId: string }>(token)?.userId;
 };
 
 export const connectHandler = async (event: APIGatewayEvent) => {
   const { requestContext, headers } = event;
-  console.log("headers", headers);
+
   const userId = getUserIdFromHeaders(headers);
-  console.log("userId", userId);
+
   if (!userId) {
     return {
       statusCode: 400,
@@ -58,7 +56,7 @@ export const connectHandler = async (event: APIGatewayEvent) => {
 
 export const disconnectHandler = async (event: APIGatewayEvent) => {
   const { requestContext, headers } = event;
-
+  console.log("headers", headers);
   if (!requestContext.connectionId) {
     return {
       statusCode: 400,
