@@ -45,6 +45,7 @@ export class CompleteGenerationHandler extends Handler<
         action: "complete-generation",
         data: {
           image,
+          taskId,
         },
       });
     }
