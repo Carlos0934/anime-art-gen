@@ -109,7 +109,7 @@ generationRoutes.post(
 );
 
 generationRoutes.get(
-  "/images/:userId",
+  "/images",
   jwt({
     secret: process.env.JWT_SECRET!,
   }),
