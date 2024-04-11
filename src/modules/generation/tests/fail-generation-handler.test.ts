@@ -1,10 +1,7 @@
 import { describe, test, vi, expect } from "vitest";
 import { FailGenerationHandler } from "../handlers/fail-generation";
 import { Context } from "@/core/context";
-import {
-  FailRequestGenerationEvent,
-  RequestGenerationFailedEvent,
-} from "../events";
+import { FailRequestGenerationEvent } from "../events";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 
 describe("FailGenerationHandler", () => {
@@ -21,7 +18,6 @@ describe("FailGenerationHandler", () => {
       .fn(ctx.tasksUsersKvStore.get)
       .mockResolvedValue({ taskId, userId: "user_id" });
 
-    const publishSpy = vi.spyOn(ctx.pubNotificationService, "publish");
     const deleteSpy = vi.spyOn(ctx.tasksUsersKvStore, "delete");
 
     // Act
@@ -30,13 +26,6 @@ describe("FailGenerationHandler", () => {
     // Assert
     expect(ctx.tasksUsersKvStore.get).toHaveBeenCalledWith(taskId);
     expect(ctx.tasksUsersKvStore.delete).toHaveBeenCalledWith(taskId);
-
-    // Check if the correct event was published
-    const publishedEvent = publishSpy.mock
-      .calls[0][0] as RequestGenerationFailedEvent;
-    expect(publishedEvent).toBeInstanceOf(RequestGenerationFailedEvent);
-    expect(publishedEvent.data.taskId).toBe(taskId);
-    expect(publishedEvent.data.error).toBe(error);
 
     // Check if the correct task was deleted
     expect(deleteSpy).toHaveBeenCalledWith(taskId);

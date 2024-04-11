@@ -21,12 +21,17 @@ export class FailGenerationHandler extends Handler<
 
     await ctx.tasksUsersKvStore.delete(taskId);
 
-    const failGenerationEvent = new RequestGenerationFailedEvent({
-      taskId,
-      error,
-    });
+    const connection = await ctx.usersConnectionsKvStore.get(task.userId);
 
-    await ctx.pubNotificationService.publish(failGenerationEvent);
+    if (connection) {
+      ctx.wsManagement.postToConnection(connection.connectionId, {
+        action: "fail-generation",
+        data: {
+          taskId,
+          error,
+        },
+      });
+    }
 
     return;
   }

@@ -4,10 +4,7 @@ import { Context } from "@/core/context";
 import { Exception, ExceptionType } from "@/core/exception";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
 import { StartGenerationRequestHandler } from "../handlers/start-generation";
-import {
-  RequestGenerationStartedEvent,
-  StartRequestGenerationEvent,
-} from "../events";
+import { StartRequestGenerationEvent } from "../events";
 import { ImageModels, ImageQualities } from "@/core/entities/image-generation";
 import { User } from "@/core/entities/user";
 import { UserMother } from "@/core/tests/utils/user-mother";
