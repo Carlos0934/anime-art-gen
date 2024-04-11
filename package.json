@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "esbuild --bundle --minify  --outfile=./dist/api.js  --platform=node --target=node20 ./src/functions/api.ts",
+    "build": "node esbuild.mjs",
     "test": "vitest",
     "dev": "tsx watch  --ignore node_modules ./src/index.ts  ",
     "generate": "drizzle-kit generate:sqlite",
@@ -11,7 +11,6 @@
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
-    "glob": "^10.3.12",
     "serverless-domain-manager": "^7.3.8",
     "tsx": "^4.7.1",
     "vitest": "^1.4.0"
@@ -23,7 +22,6 @@
     "@aws-sdk/client-ses": "^3.549.0",
     "@aws-sdk/client-sns": "^3.549.0",
     "@aws-sdk/client-sqs": "^3.549.0",
-    "@hono/graphql-server": "^0.4.3",
     "@hono/node-server": "^1.9.1",
     "@hono/zod-validator": "^0.2.1",
     "@libsql/client": "^0.6.0",
