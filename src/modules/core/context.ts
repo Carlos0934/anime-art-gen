@@ -37,10 +37,12 @@ export type Context = {
   }>;
   readonly paymentRepository: PaymentRepository;
   readonly usersConnectionsKvStore: KVStore<{
-    userId: string;
     connectionId: string;
   }>;
   readonly wsManagement: WsManagement;
+  readonly connectionsUsersKvStore: KVStore<{
+    userId: string;
+  }>;
 };
 
 export const createContext = (): Context => {
@@ -59,9 +61,11 @@ export const createContext = (): Context => {
   }>("tasks_users");
   const paymentRepository = new DrizzlePaymentRepository(db);
   const usersConnectionsKvStore = new DynamoDBKvStore<{
-    userId: string;
     connectionId: string;
   }>("users_connections");
+  const connectionsUsersKvStore = new DynamoDBKvStore<{
+    userId: string;
+  }>("connections_users");
 
   const wsManagement = new WsManagement(process.env.WS_ENDPOINT!);
   return {
@@ -78,5 +82,6 @@ export const createContext = (): Context => {
     paymentRepository,
     usersConnectionsKvStore,
     wsManagement,
+    connectionsUsersKvStore,
   };
 };

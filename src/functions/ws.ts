@@ -42,8 +42,11 @@ export const connectHandler = async (event: APIGatewayEvent) => {
   }
 
   await ctx.usersConnectionsKvStore.set(userId, {
-    userId,
     connectionId: requestContext.connectionId,
+  });
+
+  await ctx.connectionsUsersKvStore.set(requestContext.connectionId, {
+    userId,
   });
 
   return {
@@ -55,8 +58,7 @@ export const connectHandler = async (event: APIGatewayEvent) => {
 };
 
 export const disconnectHandler = async (event: APIGatewayEvent) => {
-  const { requestContext, headers } = event;
-  console.log("headers", headers);
+  const { requestContext } = event;
   if (!requestContext.connectionId) {
     return {
       statusCode: 400,
@@ -66,18 +68,22 @@ export const disconnectHandler = async (event: APIGatewayEvent) => {
     };
   }
 
-  const userId = getUserIdFromHeaders(headers);
+  const connection = await ctx.connectionsUsersKvStore.get(
+    requestContext.connectionId
+  );
 
-  if (!userId) {
+  if (!connection) {
     return {
       statusCode: 400,
       body: JSON.stringify({
-        message: "userId is required",
+        message: "Connection not found",
       }),
     };
   }
 
-  await ctx.usersConnectionsKvStore.delete(userId);
+  await ctx.usersConnectionsKvStore.delete(connection.userId);
+
+  await ctx.connectionsUsersKvStore.delete(requestContext.connectionId);
 
   return {
     statusCode: 200,
