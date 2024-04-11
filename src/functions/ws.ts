@@ -3,10 +3,27 @@ import { APIGatewayEvent } from "aws-lambda";
 
 const ctx = createContext();
 
-export const connectHandler = async (event: APIGatewayEvent) => {
-  const { requestContext, body, queryStringParameters } = event;
+const getUserIdFromHeaders = (headers: {
+  [key: string]: string | undefined;
+}) => {
+  if (!headers.authorization) {
+    return null;
+  }
+  if (!headers.authorization.startsWith("Bearer ")) {
+    return null;
+  }
 
-  const userId = queryStringParameters?.userId;
+  const token = headers.authorization.slice(7);
+
+  ctx.jwtService.verify(token);
+
+  return ctx.jwtService.verify<{ userId: string }>(token)?.userId;
+};
+
+export const connectHandler = async (event: APIGatewayEvent) => {
+  const { requestContext, headers } = event;
+
+  const userId = getUserIdFromHeaders(headers);
   if (!userId) {
     return {
       statusCode: 400,
@@ -15,6 +32,7 @@ export const connectHandler = async (event: APIGatewayEvent) => {
       }),
     };
   }
+
   if (!requestContext.connectionId) {
     return {
       statusCode: 400,
@@ -38,7 +56,7 @@ export const connectHandler = async (event: APIGatewayEvent) => {
 };
 
 export const disconnectHandler = async (event: APIGatewayEvent) => {
-  const { requestContext } = event;
+  const { requestContext, headers } = event;
 
   if (!requestContext.connectionId) {
     return {
@@ -49,7 +67,18 @@ export const disconnectHandler = async (event: APIGatewayEvent) => {
     };
   }
 
-  await ctx.usersConnectionsKvStore.delete(requestContext.connectionId);
+  const userId = getUserIdFromHeaders(headers);
+
+  if (!userId) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "userId is required",
+      }),
+    };
+  }
+
+  await ctx.usersConnectionsKvStore.delete(userId);
 
   return {
     statusCode: 200,
