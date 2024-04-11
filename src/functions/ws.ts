@@ -6,14 +6,14 @@ const ctx = createContext();
 const getUserIdFromHeaders = (headers: {
   [key: string]: string | undefined;
 }) => {
-  if (!headers.authorization) {
+  if (!headers.Authorization) {
     return null;
   }
-  if (!headers.authorization.startsWith("Bearer ")) {
+  if (!headers.Authorization.startsWith("Bearer ")) {
     return null;
   }
 
-  const token = headers.authorization.slice(7);
+  const token = headers.Authorization.slice(7);
 
   console.log("token", token);
 
