@@ -8,6 +8,8 @@ export class WsManagement {
     });
   }
   postToConnection = async (connectionId: string, data: {}) => {
+    console.log("Sending data to connection", connectionId);
+    console.log("Data", data);
     const params = {
       ConnectionId: connectionId,
       Data: JSON.stringify(data),

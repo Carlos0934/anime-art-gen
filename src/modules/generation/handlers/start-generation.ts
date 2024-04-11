@@ -33,7 +33,7 @@ export class StartGenerationRequestHandler extends Handler<
 
     const result = await ctx.usersConnectionsKvStore.get(userId);
     if (result) {
-      ctx.wsManagement.postToConnection(result.connectionId, {
+      await ctx.wsManagement.postToConnection(result.connectionId, {
         action: "start-generation",
         data: {
           taskId,

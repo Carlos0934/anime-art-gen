@@ -24,7 +24,7 @@ export class FailGenerationHandler extends Handler<
     const connection = await ctx.usersConnectionsKvStore.get(task.userId);
 
     if (connection) {
-      ctx.wsManagement.postToConnection(connection.connectionId, {
+      await ctx.wsManagement.postToConnection(connection.connectionId, {
         action: "fail-generation",
         data: {
           taskId,
