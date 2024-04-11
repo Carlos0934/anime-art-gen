@@ -82,13 +82,13 @@ functions:
     
   
   disconnectHandler:
-    handler: ws.disconnectHandler
+    handler: dist/ws.disconnectHandler
     events:
       - websocket:
           route: $disconnect
   
   connectHandler:
-    handler: ws.connectHandler
+    handler: dist/ws.connectHandler
     events:
       - websocket:
           route: $connect
