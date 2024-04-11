@@ -4,13 +4,16 @@
     "test": "vitest",
     "dev": "tsx watch  --ignore node_modules ./src/index.ts  ",
     "generate": "drizzle-kit generate:sqlite",
-    "migrate": "drizzle-kit push:sqlite"
+    "migrate": "drizzle-kit push:sqlite",
+    "deploy:prod": "serverless deploy --stage prod",
+    "deploy:dev": "serverless deploy --stage dev"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.137",
     "@types/jsonwebtoken": "^9.0.6",
     "drizzle-kit": "^0.20.14",
     "esbuild": "^0.17.11",
+    "serverless": "^3.38.0",
     "serverless-domain-manager": "^7.3.8",
     "tsx": "^4.7.1",
     "vitest": "^1.4.0"
