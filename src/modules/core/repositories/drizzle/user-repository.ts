@@ -9,7 +9,7 @@ import database from "@/core/config/db/database";
 export class DrizzleUserRepository implements UserRepository {
   constructor(private readonly db: typeof database) {}
 
-  async findById(id: string): Promise<User | null> {
+  async getById(id: string): Promise<User | null> {
     const user = await this.db.query.users.findFirst({
       where: eq(users.id, id),
     });
@@ -26,7 +26,7 @@ export class DrizzleUserRepository implements UserRepository {
     return result.length > 0;
   }
 
-  async findByEmail(email: string): Promise<User | null> {
+  async getByEmail(email: string): Promise<User | null> {
     const user = await this.db.query.users.findFirst({
       where: eq(users.email, email),
     });

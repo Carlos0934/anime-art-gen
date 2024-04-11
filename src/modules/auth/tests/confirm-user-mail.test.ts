@@ -19,8 +19,8 @@ describe.concurrent("ConfirmUserMailHandler", () => {
     const event = new ConfirmUserMailEvent({ token });
 
     ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
     ctx.userRepository.update = vi
       .fn(ctx.userRepository.update)
@@ -57,8 +57,8 @@ describe.concurrent("ConfirmUserMailHandler", () => {
     ctx.jwtService.verify = vi
       .fn()
       .mockReturnValue({ email: "nonexistent@example.com" });
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(null);
 
     // Act & Assert
@@ -75,8 +75,8 @@ describe.concurrent("ConfirmUserMailHandler", () => {
     const event = new ConfirmUserMailEvent({ token });
 
     ctx.jwtService.verify = vi.fn().mockReturnValue({ email: user.email });
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     // Act

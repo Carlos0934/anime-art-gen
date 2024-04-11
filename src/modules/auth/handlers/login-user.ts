@@ -18,7 +18,7 @@ export class LoginUserHandler extends Handler<
   ): Promise<{ token: string }> {
     const { email, password } = event.data;
 
-    const user = await context.userRepository.findByEmail(email);
+    const user = await context.userRepository.getByEmail(email);
 
     if (!user) {
       throw new InvalidCredentialsException();

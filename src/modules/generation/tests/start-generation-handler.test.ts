@@ -38,8 +38,8 @@ describe("StartGenerationRequestHandler", () => {
       userId: user.id,
     });
 
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(user);
     ctx.imageGeneratorClient.generateImage = vi
       .fn(ctx.imageGeneratorClient.generateImage)
@@ -55,7 +55,7 @@ describe("StartGenerationRequestHandler", () => {
     await handler.handle(event, ctx);
 
     // Assert
-    expect(ctx.userRepository.findById).toHaveBeenCalledWith(user.id);
+    expect(ctx.userRepository.getById).toHaveBeenCalledWith(user.id);
     expect(ctx.imageGeneratorClient.generateImage).toHaveBeenCalledWith(
       event.data.params,
       user.id
@@ -114,8 +114,8 @@ describe("StartGenerationRequestHandler", () => {
       userId: "user_id",
     });
 
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(null);
 
     // Act

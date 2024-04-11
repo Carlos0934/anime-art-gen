@@ -19,7 +19,7 @@ export class ConfirmUserMailHandler extends Handler<
 
     const { email } = payload;
 
-    const user = await ctx.userRepository.findByEmail(email);
+    const user = await ctx.userRepository.getByEmail(email);
 
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 

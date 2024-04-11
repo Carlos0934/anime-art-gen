@@ -14,7 +14,7 @@ export class SendPasswordResetHandler extends Handler<
   ): Promise<void> {
     const { email } = event.data;
 
-    const user = await userRepository.findByEmail(email);
+    const user = await userRepository.getByEmail(email);
 
     if (!user) return;
 

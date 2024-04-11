@@ -14,7 +14,7 @@ export class RechargeCreditsHandler extends Handler<
   async handle(event: RechargeCreditsEvent, ctx: Context): Promise<number> {
     const { userEmail, amount } = event.data;
 
-    const user = await ctx.userRepository.findByEmail(userEmail);
+    const user = await ctx.userRepository.getByEmail(userEmail);
 
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 

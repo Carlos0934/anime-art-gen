@@ -14,7 +14,7 @@ export class GetPaymentHistoryHandler extends Handler<
     { data: { userId } }: GetPaymentHistoryEvent,
     ctx: Context
   ): Promise<{ payments: Payment[] }> {
-    const user = await ctx.userRepository.findById(userId);
+    const user = await ctx.userRepository.getById(userId);
 
     if (!user) {
       throw new Exception("User not found", ExceptionType.NotFound);

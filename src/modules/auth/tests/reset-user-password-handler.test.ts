@@ -26,8 +26,8 @@ describe.concurrent("ResetUserPasswordHandler", () => {
     ctx.jwtService.verify = vi
       .fn(ctx.jwtService.verify)
       .mockReturnValue(Promise.resolve({ email: user.email })) as any;
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
     ctx.passwordHasher.comparePassword = vi
       .fn(ctx.passwordHasher.comparePassword)
@@ -78,8 +78,8 @@ describe.concurrent("ResetUserPasswordHandler", () => {
     ctx.jwtService.verify = vi
       .fn(ctx.jwtService.verify)
       .mockReturnValue({ email: "nonexistent@example.com" }) as any;
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(null);
 
     // Act & Assert
@@ -102,8 +102,8 @@ describe.concurrent("ResetUserPasswordHandler", () => {
     ctx.jwtService.verify = vi
       .fn(ctx.jwtService.verify)
       .mockReturnValue({ email: user.email }) as any;
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
     ctx.passwordHasher.comparePassword = vi
       .fn(ctx.passwordHasher.comparePassword)

@@ -17,8 +17,8 @@ describe.concurrent("LoginUserHandler", () => {
     const ctx: Context = createTestContext();
     const user = UserMother.createVerifiedUser();
     const token = "token";
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.passwordHasher.comparePassword = vi
@@ -43,8 +43,8 @@ describe.concurrent("LoginUserHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const user = UserMother.createDefaultUser();
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(null);
 
     const event = new LoginUserEvent({
@@ -66,8 +66,8 @@ describe.concurrent("LoginUserHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const user = UserMother.createVerifiedUser();
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.passwordHasher.comparePassword = vi
@@ -93,8 +93,8 @@ describe.concurrent("LoginUserHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const user = UserMother.createDefaultUser();
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     const event = new LoginUserEvent({
@@ -116,8 +116,8 @@ describe.concurrent("LoginUserHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const user = UserMother.createVerifiedUser();
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.passwordHasher.comparePassword = vi

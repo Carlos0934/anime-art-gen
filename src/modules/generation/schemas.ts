@@ -29,9 +29,9 @@ export const RequestGenerationCallbackSchema = z.object({
     height: z.number(),
     prompt: z.string(),
     guidance_scale: z.number(),
-    style_selector: z.string(),
+    style_selector: z.string().optional(),
     negative_prompt: z.string().optional(),
-    quality_selector: z.string(),
-    num_inference_steps: z.number(),
+    quality_selector: z.string().optional(),
+    num_inference_steps: z.number().optional(),
   }),
 });

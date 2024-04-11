@@ -23,8 +23,8 @@ describe.concurrent("RechargeCreditsHandler", () => {
     };
     const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.userRepository.update;
@@ -57,8 +57,8 @@ describe.concurrent("RechargeCreditsHandler", () => {
     };
     const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.userRepository.update = vi.fn(ctx.userRepository.update);
@@ -85,8 +85,8 @@ describe.concurrent("RechargeCreditsHandler", () => {
       amount,
     });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(null);
 
     // Act & Assert
@@ -108,8 +108,8 @@ describe.concurrent("RechargeCreditsHandler", () => {
 
     const event = new RechargeCreditsEvent({ userEmail: user.email, amount });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
 
     ctx.creditsConverter.convertToCredits = vi.fn(() => {

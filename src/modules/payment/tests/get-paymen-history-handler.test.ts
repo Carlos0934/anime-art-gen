@@ -29,8 +29,8 @@ describe.concurrent("GetPaymentHistoryHandler", () => {
 
     const event = new GetPaymentHistoryEvent({ userId: user.id });
 
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(user);
 
     ctx.paymentRepository.getPaymentsByUserId = vi
@@ -51,8 +51,8 @@ describe.concurrent("GetPaymentHistoryHandler", () => {
 
     const event = new GetPaymentHistoryEvent({ userId: user.id });
 
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(null);
 
     // Act & Assert

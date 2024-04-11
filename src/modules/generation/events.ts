@@ -6,6 +6,7 @@ export enum GenerationEvents {
   ImageGenerationFail = "generation.image-generation-fail",
   ImageGenerationStart = "generation.image-generation-start",
   ImageGenerationComplete = "generation.image-generation-complete",
+  GetGenerations = "generation.get-generations",
 }
 
 export class FailRequestGenerationEvent extends Event {

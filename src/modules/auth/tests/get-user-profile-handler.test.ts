@@ -15,8 +15,8 @@ describe("GetUserProfileHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const user = UserMother.createDefaultUser();
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(user);
     const event = new GetUserProfileEvent({ userId: user.id });
 
@@ -36,8 +36,8 @@ describe("GetUserProfileHandler", () => {
     // Arrange
     const ctx: Context = createTestContext();
     const userId = "invalid_user_id";
-    ctx.userRepository.findById = vi
-      .fn(ctx.userRepository.findById)
+    ctx.userRepository.getById = vi
+      .fn(ctx.userRepository.getById)
       .mockResolvedValue(null);
 
     const event = new GetUserProfileEvent({ userId });

@@ -2,6 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { Hono } from "hono";
 import { jwt } from "hono/jwt";
 import {
+  RequestEventGenerationCompleteSchema,
   RequestGenerationCallbackSchema,
   RequestGenerationSchema,
 } from "./schemas";
@@ -14,30 +15,39 @@ import {
 } from "./events";
 import {
   ImageModels,
+  ImageQualities,
+  ImageStyles,
   modelQualityMap,
   modelStyleMap,
 } from "@/core/entities/image-generation";
+import { extractSeedFromLogs } from "./utils/extract-seed-from-logs";
+import { GetImageGenerationsEvent } from "./handlers/get-generations";
 
 const generationRoutes = new Hono();
 
 generationRoutes.post(
   "/callback/:userId",
-  zValidator("json", RequestGenerationCallbackSchema),
+
   async (ctx) => {
     const isValid = await validateWebhook(
-      ctx.req.raw,
-      process.env.REPLICATE_WEBHOOK_SECRET!
+      ctx.req.raw.clone(),
+      process.env.REPLICATE_SIGNING_KEY!
     );
 
     if (!isValid) {
       return ctx.json({ message: "Invalid webhook" }, 401);
     }
 
-    const data = ctx.req.valid("json");
+    const payload = await ctx.req.json();
+    const result = RequestGenerationCallbackSchema.safeParse(payload);
+    if (!result.success) {
+      console.log(result.error);
+      return ctx.json({ message: "Invalid data" }, 400);
+    }
 
-    const { id, output, logs, input, status } = data;
+    const { id, output, logs, input, status } = result.data;
 
-    if (status !== "completed") {
+    if (status !== "succeeded") {
       const event = new FailRequestGenerationEvent({
         taskId: id,
         error: "Image generation failed",
@@ -48,8 +58,13 @@ generationRoutes.post(
 
     const seed = extractSeedFromLogs(logs);
     const model = ImageModels.AniImagineXL;
-    const quality = modelQualityMap[model][input.quality_selector];
-    const style = modelStyleMap[model][input.style_selector];
+    const quality = input.quality_selector
+      ? modelQualityMap[model][input.quality_selector]
+      : ImageQualities.Medium;
+    const style = input.style_selector
+      ? modelStyleMap[model][input.style_selector]
+      : ImageStyles.None;
+
     const userId = ctx.req.param("userId");
     const event = new CompleteRequestGenerationEvent({
       imageUrl: output,
@@ -63,7 +78,7 @@ generationRoutes.post(
         quality,
         style,
         seed,
-        steps: input.num_inference_steps,
+        steps: input.num_inference_steps || 27,
         strength: input.guidance_scale,
         negativePrompt: input.negative_prompt,
       },
@@ -71,7 +86,7 @@ generationRoutes.post(
 
     await eventBus.publish(event);
 
-    return ctx.json({ message: "Hello, World!" });
+    return ctx.status(201);
   }
 );
 
@@ -93,4 +108,18 @@ generationRoutes.post(
   }
 );
 
+generationRoutes.get(
+  "/images/:userId",
+  jwt({
+    secret: process.env.JWT_SECRET!,
+  }),
+  async (ctx) => {
+    const { userId } = ctx.get("jwtPayload") as { userId: string };
+
+    const event = new GetImageGenerationsEvent({ userId });
+    const result = await eventBus.publish(event);
+
+    return ctx.json(result);
+  }
+);
 export default generationRoutes;

@@ -16,8 +16,8 @@ describe.concurrent("SendPasswordResetHandler", () => {
     const email = user.email;
     const event = new SendPasswordResetEvent({ email });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(user);
     ctx.jwtService.sign = vi
       .fn(ctx.jwtService.sign)
@@ -37,8 +37,8 @@ describe.concurrent("SendPasswordResetHandler", () => {
     const email = "nonexistent@example.com";
     const event = new SendPasswordResetEvent({ email });
 
-    ctx.userRepository.findByEmail = vi
-      .fn(ctx.userRepository.findByEmail)
+    ctx.userRepository.getByEmail = vi
+      .fn(ctx.userRepository.getByEmail)
       .mockResolvedValue(null);
     ctx.jwtService.sign = vi.fn(ctx.jwtService.sign);
     ctx.mailer.send = vi.fn(ctx.mailer.send);

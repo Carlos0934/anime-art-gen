@@ -5,15 +5,8 @@ import { Exception, ExceptionType } from "@/core/exception";
 
 export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
   private readonly replicate: Replicate;
-  private readonly modelsMap: Record<
-    ImageModels,
-    { model: string; version: string }
-  > = {
-    "ani-imagine-xl": {
-      model: "cjwbw/animagine-xl-3.1",
-      version:
-        "6afe2e6b27dad2d6f480b59195c221884b6acc589ff4d05ff0e5fc058690fbb9",
-    },
+  private readonly modelsMap: Record<ImageModels, string> = {
+    "ani-imagine-xl": "anime-art-gen",
   };
   constructor() {
     this.replicate = new Replicate();
@@ -31,7 +24,7 @@ export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
   }
 
   private async createPrediction(data: GenerateImageInput, userId: string) {
-    const { model, version } = this.modelsMap[data.model as ImageModels];
+    const model = this.modelsMap[data.model as ImageModels];
     console.log("model", model);
     const input = {
       prompt: data.prompt,
@@ -47,13 +40,15 @@ export class ReplicateImageGeneratorClient implements ImageGeneratorClient {
     };
     const callbackUrl = process.env.REPLICATE_CALLBACK_URL! + `/${userId}`;
 
-    const result = await this.replicate.predictions.create({
+    const result = await this.replicate.deployments.predictions.create(
+      "carlos0934",
       model,
-      version,
-      input,
-      webhook: callbackUrl,
-      webhook_events_filter: ["completed"],
-    });
+      {
+        input,
+        webhook: callbackUrl,
+        webhook_events_filter: ["completed"],
+      }
+    );
     return { taskId: result.id };
   }
 }

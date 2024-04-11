@@ -5,9 +5,9 @@ import { vi } from "vitest";
 export const createTestContext = (): Context => {
   return {
     userRepository: {
-      findByEmail: vi.fn(),
+      getByEmail: vi.fn(),
       save: vi.fn(),
-      findById: vi.fn(),
+      getById: vi.fn(),
       delete: vi.fn(),
       update: vi.fn(),
       userExists: vi.fn(),

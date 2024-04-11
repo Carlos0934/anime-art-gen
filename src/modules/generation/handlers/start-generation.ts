@@ -17,7 +17,7 @@ export class StartGenerationRequestHandler extends Handler<
     { data: { params, userId } }: StartRequestGenerationEvent,
     ctx: Context
   ): Promise<void> {
-    const user = await ctx.userRepository.findById(userId);
+    const user = await ctx.userRepository.getById(userId);
     if (!user) throw new Exception("User not found", ExceptionType.NotFound);
 
     const { taskId } = await ctx.imageGeneratorClient.generateImage(

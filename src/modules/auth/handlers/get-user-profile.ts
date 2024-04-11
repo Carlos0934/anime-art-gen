@@ -13,7 +13,7 @@ export class GetUserProfileHandler extends Handler<
     { data: { userId } }: GetUserProfileEvent,
     ctx: Context
   ): Promise<{ user: Omit<User, "password" | "emailVerified"> | null }> {
-    const user = await ctx.userRepository.findById(userId);
+    const user = await ctx.userRepository.getById(userId);
     if (!user) {
       return { user: null };
     }

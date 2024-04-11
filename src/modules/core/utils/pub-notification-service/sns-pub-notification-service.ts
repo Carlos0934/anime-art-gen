@@ -12,7 +12,7 @@ export class SNSPubNotificationService implements PubNotificationService {
     [GenerationEvents.ImageGenerationStart]:
       process.env.IMAGE_GENERATION_START_TOPIC!,
     [GenerationEvents.ImageGenerationComplete]:
-      process.env.IMAGE_GENERATION_SUCCESS_TOPIC!,
+      process.env.IMAGE_GENERATION_COMPLETE_TOPIC!,
   };
   constructor() {
     this.sns = new SNS();
