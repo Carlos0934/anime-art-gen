@@ -29,14 +29,17 @@ export class StartGenerationRequestHandler extends Handler<
 
     await ctx.userRepository.update(user);
 
-    ctx.tasksUsersKvStore.set(taskId, { taskId, userId });
+    await ctx.tasksUsersKvStore.set(taskId, { taskId, userId });
 
-    const startGenerationEvent = new RequestGenerationStartedEvent({
-      userId,
-      taskId,
-    });
-
-    await ctx.pubNotificationService.publish(startGenerationEvent);
+    const result = await ctx.usersConnectionsKvStore.get(userId);
+    if (result) {
+      ctx.wsManagement.postToConnection(result.connectionId, {
+        action: "start-generation",
+        data: {
+          taskId,
+        },
+      });
+    }
 
     return;
   }

@@ -1,8 +1,11 @@
 import { Context } from "@/core/context";
+import { WsManagement } from "@/core/utils/ws-management";
 
 import { vi } from "vitest";
 
 export const createTestContext = (): Context => {
+  const ws = new WsManagement("http://localhost:3001");
+  ws.postToConnection = vi.fn().mockResolvedValue(undefined);
   return {
     userRepository: {
       getByEmail: vi.fn(),
@@ -53,5 +56,11 @@ export const createTestContext = (): Context => {
       get: vi.fn(),
       set: vi.fn(),
     },
+    connectionsUsersKvStore: {
+      delete: vi.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
+    },
+    wsManagement: ws,
   };
 };

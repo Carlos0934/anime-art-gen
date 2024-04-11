@@ -41,14 +41,17 @@ export class CompleteGenerationHandler extends Handler<
     });
 
     await ctx.imageGenerationRepository.save(image);
+    await ctx.tasksUsersKvStore.delete(taskId);
 
-    const requestGenerationCompleteEvent = new RequestGenerationCompletedEvent({
-      userId,
-      taskId,
-      imageId: image.id,
-    });
-
-    await ctx.pubNotificationService.publish(requestGenerationCompleteEvent);
+    const result = await ctx.usersConnectionsKvStore.get(userId);
+    if (result) {
+      ctx.wsManagement.postToConnection(result.connectionId, {
+        action: "complete-generation",
+        data: {
+          image,
+        },
+      });
+    }
     return;
   }
 }
