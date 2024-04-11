@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deployment:
+  api-deployment:
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -27,12 +27,15 @@ jobs:
           node-version: "20.x"
 
       - name: Install dependencies
+        working-directory: ./api
         run: npm ci
 
       - name: Test
+        working-directory: ./api
         run: npm test
 
       - name: Build
+        working-directory: ./api
         run: npm run build
 
       - name: Configure AWS credentials
@@ -43,6 +46,7 @@ jobs:
           role-session-name: GitHub
 
       - name: Deploy
+        working-directory: ./api
         run: npm run deploy:prod
         env:
           AWS_REGION: ${{ secrets.AWS_REGION }}
