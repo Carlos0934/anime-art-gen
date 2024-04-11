@@ -7,10 +7,7 @@ import {
   ImageQualities,
 } from "@/core/entities/image-generation";
 import { createTestContext } from "@/core/tests/utils/create-test-context";
-import {
-  CompleteRequestGenerationEvent,
-  RequestGenerationCompletedEvent,
-} from "../events";
+import { CompleteRequestGenerationEvent } from "../events";
 
 describe("CompleteGenerationHandler", () => {
   const handler: CompleteGenerationHandler = new CompleteGenerationHandler();
@@ -38,13 +35,11 @@ describe("CompleteGenerationHandler", () => {
 
     const saveImageSpy = vi.spyOn(ctx.imageGenerationRepository, "save");
 
-    const publishSpy = vi.spyOn(ctx.pubNotificationService, "publish");
     // Act
     await handler.handle(event, ctx);
 
     // Assert
     expect(ctx.imageGenerationRepository.save).toHaveBeenCalled();
-    expect(ctx.pubNotificationService.publish).toHaveBeenCalled();
 
     // Check if the correct image generation entity was saved
     const savedImage: ImageGeneration = saveImageSpy.mock.calls[0][0];
@@ -65,13 +60,5 @@ describe("CompleteGenerationHandler", () => {
         style: "style_name",
       },
     });
-
-    // Check if the correct event was published
-    const publishedEvent = publishSpy.mock
-      .calls[0][0] as RequestGenerationCompletedEvent;
-    expect(publishedEvent).toBeInstanceOf(RequestGenerationCompletedEvent);
-    expect(publishedEvent.data.taskId).toBe("task_id");
-    expect(publishedEvent.data.imageId).toBe(savedImage.id);
-    expect(publishedEvent.data.userId).toBe("user_id");
   });
 });

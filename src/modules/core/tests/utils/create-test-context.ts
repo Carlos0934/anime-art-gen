@@ -5,7 +5,7 @@ import { vi } from "vitest";
 
 export const createTestContext = (): Context => {
   const ws = new WsManagement("http://localhost:3001");
-  ws.postToConnection = vi.fn().mockResolvedValue(undefined);
+  ws.postToConnection = vi.fn();
   return {
     userRepository: {
       getByEmail: vi.fn(),

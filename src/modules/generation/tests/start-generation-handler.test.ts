@@ -48,9 +48,15 @@ describe("StartGenerationRequestHandler", () => {
       ctx.imageGeneratorClient,
       "generateImage"
     );
-    const publishSpy = vi.spyOn(ctx.pubNotificationService, "publish");
+    ctx.usersConnectionsKvStore.get = vi.fn().mockResolvedValue({
+      connectionId: "connection_id",
+    });
+
+    ctx.wsManagement.postToConnection = vi.fn();
+
     const userRepositorySpy = vi.spyOn(ctx.userRepository, "update");
     const tasksUsersKvStoreSpy = vi.spyOn(ctx.tasksUsersKvStore, "set");
+
     // Act
     await handler.handle(event, ctx);
 
@@ -68,15 +74,7 @@ describe("StartGenerationRequestHandler", () => {
       taskId: "task_id",
       userId: user.id,
     });
-    expect(ctx.pubNotificationService.publish).toHaveBeenCalled();
-
-    // Check if the correct event was published
-    const publishedEvent = publishSpy.mock
-      .calls[0][0] as RequestGenerationStartedEvent;
-
-    expect(publishedEvent).toBeInstanceOf(RequestGenerationStartedEvent);
-    expect(publishedEvent.data.taskId).toBe("task_id");
-    expect(publishedEvent.data.userId).toBe(user.id);
+    expect(ctx.wsManagement.postToConnection).toHaveBeenCalled();
 
     // Check if the user was updated correctly
 

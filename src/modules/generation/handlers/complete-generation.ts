@@ -1,9 +1,5 @@
 import { Handler } from "@/core/handler";
-import {
-  GenerationEvents,
-  RequestGenerationCompletedEvent,
-  CompleteRequestGenerationEvent,
-} from "../events";
+import { GenerationEvents, CompleteRequestGenerationEvent } from "../events";
 import { Context } from "@/core/context";
 import { ImageGeneration } from "@/core/entities/image-generation";
 
