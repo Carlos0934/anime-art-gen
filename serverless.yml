@@ -41,6 +41,7 @@ provider:
     BUCKET_NAME: ${env:BUCKET_NAME}
     CONFIRM_EMAIL_CALLBACK_URL: ${env:CONFIRM_EMAIL_CALLBACK_URL}
     EMAIL_FROM: ${env:EMAIL_FROM}
+    WS_ENDPOINT: ${env:WS_ENDPOINT}
 
   iam:
       role:
@@ -80,4 +81,16 @@ functions:
           method: ANY
     
   
- 
+  disconnectHandler:
+    handler: ws.disconnectHandler
+    events:
+      - websocket:
+          route: $disconnect
+  
+  connectHandler:
+    handler: ws.connectHandler
+    events:
+      - websocket:
+          route: $connect
+
+

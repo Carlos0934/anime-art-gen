@@ -31,6 +31,7 @@ export const createTestContext = (): Context => {
     },
     imageGenerationRepository: {
       save: vi.fn(),
+      getByUserId: vi.fn(),
     },
     pubNotificationService: {
       publish: vi.fn(),
@@ -46,6 +47,11 @@ export const createTestContext = (): Context => {
     paymentRepository: {
       save: vi.fn(),
       getPaymentsByUserId: vi.fn(),
+    },
+    usersConnectionsKvStore: {
+      delete: vi.fn(),
+      get: vi.fn(),
+      set: vi.fn(),
     },
   };
 };

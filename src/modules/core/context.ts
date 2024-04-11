@@ -19,6 +19,7 @@ import { FileService } from "./utils/file-service/interface";
 import { S3FileService } from "./utils/file-service/s3-file-service";
 import { PaymentRepository } from "./repositories/payment-repository";
 import { DrizzlePaymentRepository } from "./repositories/drizzle/payment-repository";
+import { WsManagement } from "./utils/ws-management";
 
 export type Context = {
   readonly userRepository: UserRepository;
@@ -35,6 +36,11 @@ export type Context = {
     userId: string;
   }>;
   readonly paymentRepository: PaymentRepository;
+  readonly usersConnectionsKvStore: KVStore<{
+    userId: string;
+    connectionId: string;
+  }>;
+  readonly wsManagement: WsManagement;
 };
 
 export const createContext = (): Context => {
@@ -52,6 +58,12 @@ export const createContext = (): Context => {
     userId: string;
   }>("tasks_users");
   const paymentRepository = new DrizzlePaymentRepository(db);
+  const usersConnectionsKvStore = new DynamoDBKvStore<{
+    userId: string;
+    connectionId: string;
+  }>("users_connections");
+
+  const wsManagement = new WsManagement(process.env.WS_ENDPOINT!);
   return {
     userRepository,
     mailer: resendMailer,
@@ -59,10 +71,12 @@ export const createContext = (): Context => {
     jwtService,
     creditsConverter,
     imageGeneratorClient,
-    pubNotificationService: pubNotificationService,
+    pubNotificationService,
     imageGenerationRepository,
     fileService,
     tasksUsersKvStore,
     paymentRepository,
+    usersConnectionsKvStore,
+    wsManagement,
   };
 };

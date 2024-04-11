@@ -63,3 +63,4 @@ jobs:
           BUCKET_NAME: ${{ secrets.BUCKET_NAME }}
           CONFIRM_EMAIL_CALLBACK_URL: ${{ secrets.CONFIRM_EMAIL_CALLBACK_URL }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          WS_ENDPOINT: ${{ secrets.WS_ENDPOINT }}
