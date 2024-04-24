@@ -1,5 +1,5 @@
 import { createContext } from "@/core/context";
-import { APIGatewayEvent } from "aws-lambda";
+import type { APIGatewayEvent } from "aws-lambda";
 
 const ctx = createContext();
 
