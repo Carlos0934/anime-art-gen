@@ -50,8 +50,12 @@ export const SignUpPage = () => {
   return (
     <section className="max-w-md p-6 mx-auto mt-24 bg-white shadow-lg ">
       <header className="text-center ">
-        <h2 className="font-sans text-4xl font-semibold">Welcome</h2>
-        <p className="mt-2 text-gray-600">Create an account </p>
+        <h2 className="font-sans text-4xl font-semibold">
+          Sign Up to your account
+        </h2>
+        <p className="mt-4 text-gray-600">
+          Create an account to get started. 🚀
+        </p>
       </header>
 
       <main className="px-4 mx-auto mt-6">

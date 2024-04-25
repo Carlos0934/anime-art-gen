@@ -1,3 +1,4 @@
+import { useToken } from "@/hooks/use-token";
 import { signIn } from "@/services/auth/sign-in";
 import { getProfile } from "@/services/user/get-profile";
 import {
@@ -27,61 +28,59 @@ type AuthContextType = {
 const AuthContext = createContext({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<AuthContextType["user"]>(null);
+  const [user, setUser] = useState<AuthContextType["user"] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const { storeToken, removeToken, token } = useToken();
 
-    if (!token) return;
+  useEffect(() => {
+    setIsLoading(true);
+    if (!token) {
+      setIsLoading(false);
+
+      return;
+    }
+    console.log("token", token);
+    console.log(user);
 
     getProfile(token)
       .then((user) => {
         setUser(user);
       })
+      .catch((error) => {
+        setUser(null);
+      })
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [token, removeToken]);
 
   const signInFn = useCallback(
     async (data: { email: string; password: string; remember: boolean }) => {
-      try {
-        setIsLoading(true);
+      const token = await signIn(data);
+      const user = await getProfile(token);
 
-        const token = await signIn(data);
-        const user = await getProfile(token);
-
-        if (!user) {
-          throw new Error("Invalid credentials");
-        }
-
-        if (data.remember) {
-          localStorage.setItem("token", token);
-        }
-        setUser(user);
-      } catch (error) {
-        console.error(error);
-        throw error;
-      } finally {
-        setIsLoading(false);
+      if (!user) {
+        throw new Error("Invalid credentials");
       }
+
+      storeToken(token, data.remember);
     },
-    []
+    [storeToken]
   );
 
   const signOut = useCallback(() => {
-    localStorage.removeItem("token");
+    removeToken();
     setUser(null);
-  }, []);
+  }, [removeToken]);
 
   return (
     <AuthContext.Provider
       value={{
         isLoading,
         signIn: signInFn,
-        signOut: signOut,
-        user,
+        signOut,
+        user: user,
       }}
     >
       {children}

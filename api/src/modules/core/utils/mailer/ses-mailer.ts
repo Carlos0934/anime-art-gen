@@ -33,6 +33,6 @@ export class SesMailer implements Mailer {
       },
       Source: process.env.EMAIL_FROM!,
     });
-    await this.ses.send(command);
+    const result = await this.ses.send(command);
   }
 }

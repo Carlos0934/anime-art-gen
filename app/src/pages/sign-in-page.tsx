@@ -1,13 +1,14 @@
 import { Input } from "@/components/input";
+import { Spinner } from "@/components/spinner";
 import { useAuth } from "@/contexts/auth-context";
 import { toast } from "sonner";
 
-import { Link, useLocation, useRoute } from "wouter";
+import { Link, Redirect, useLocation, useRoute } from "wouter";
 
 export const SignInPage = () => {
-  const { signIn, isLoading } = useAuth();
-
   const [_, navigate] = useLocation();
+  const { signIn, user, isLoading } = useAuth();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -26,6 +27,14 @@ export const SignInPage = () => {
         }
       });
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  if (user) {
+    return <Redirect to="/images" />;
+  }
 
   return (
     <section className="max-w-md p-6 mx-auto mt-24 bg-white shadow-lg ">

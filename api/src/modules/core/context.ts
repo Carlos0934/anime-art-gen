@@ -47,7 +47,7 @@ export type Context = {
 
 export const createContext = (): Context => {
   const userRepository = new DrizzleUserRepository(db);
-  const resendMailer = new SesMailer();
+  const sesMailer = new SesMailer();
   const cryptoPasswordHasher = new CryptoPasswordHasher();
   const jwtService = new JwtService();
   const creditsConverter = new CreditsConverter();
@@ -70,7 +70,7 @@ export const createContext = (): Context => {
   const wsManagement = new WsManagement(process.env.WS_ENDPOINT!);
   return {
     userRepository,
-    mailer: resendMailer,
+    mailer: sesMailer,
     passwordHasher: cryptoPasswordHasher,
     jwtService,
     creditsConverter,
