@@ -3,10 +3,11 @@ import { HTTPException } from "hono/http-exception";
 import { Exception, ExceptionType } from "../exception";
 import { AppModule } from "../app-module";
 import { eventBus } from "../eventBus";
-
+import { cors } from "hono/cors";
 export const createHonoApp = (modules?: (new () => AppModule)[]) => {
   const app = new Hono();
 
+  app.use(cors());
   app.get("/health", async (ctx) => {
     return ctx.json({ message: "OK" });
   });

@@ -3,7 +3,7 @@ type SignInInput = {
   password: string;
 };
 export const signIn = async (data: SignInInput) => {
-  const url = `${import.meta.env.API_URL}/auth/login`;
+  const url = `${import.meta.env.VITE_API_URL}/auth/login`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
