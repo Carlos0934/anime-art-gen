@@ -1,31 +1,35 @@
 import { Input } from "@/components/input";
 import { Spinner } from "@/components/spinner";
 import { useAuth } from "@/contexts/auth-context";
+import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-import { Link, Redirect, useLocation, useRoute } from "wouter";
+import { Link, Redirect, useLocation } from "wouter";
 
 export const SignInPage = () => {
   const [_, navigate] = useLocation();
   const { signIn, user, isLoading } = useAuth();
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const signInMutation = useMutation({
+    mutationFn: signIn,
+    onSuccess: () => {
+      navigate("/images");
+    },
+    onError: (error) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      } else {
+        toast.error("An error occurred");
+      }
+    },
+  });
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const rememberMe = formData.get("remember-me") === "on";
-    signIn({ email, password, remember: rememberMe })
-      .then(() => {
-        navigate("/images");
-      })
-      .catch((error) => {
-        if (error instanceof Error) {
-          toast.error(error.message);
-        } else {
-          toast.error("An error occurred");
-        }
-      });
+
+    signInMutation.mutate({ email, password, remember: rememberMe });
   };
 
   if (isLoading) {
@@ -60,10 +64,10 @@ export const SignInPage = () => {
 
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={signInMutation.isPending}
             className="w-full mt-2 py-2.5 font-semibold text-white bg-black rounded-sm hover:bg-gray-800"
           >
-            Sign In
+            {signInMutation.isPending ? <Spinner /> : "Sign In"}
           </button>
         </form>
       </main>

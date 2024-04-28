@@ -40,13 +40,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       return;
     }
-    console.log("token", token);
-    console.log(user);
 
     getProfile(token)
-      .then((user) => {
-        setUser(user);
-      })
+      .then(setUser)
       .catch((error) => {
         setUser(null);
       })

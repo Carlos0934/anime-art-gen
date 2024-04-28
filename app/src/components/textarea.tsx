@@ -1,14 +1,13 @@
 import classNames from "classnames";
 
-type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
+type TextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   label: string;
 };
-
-export function Input({ ...props }: InputProps) {
+export function TextArea({ ...props }: TextAreaProps) {
   return (
     <label className="block ">
       <span className="text-sm font-semibold">{props.label}</span>
-      <input
+      <textarea
         {...props}
         className={classNames(
           "block w-full mt-2 px-3 py-2 border border-gray-300 rounded-sm",
@@ -18,4 +17,3 @@ export function Input({ ...props }: InputProps) {
     </label>
   );
 }
-
